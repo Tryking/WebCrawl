@@ -78,6 +78,7 @@ class CaoliuDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+        spider.logger.debug('请求URL：%s' % request.url)
         return None
 
     def process_response(self, request, response, spider):
@@ -87,6 +88,7 @@ class CaoliuDownloaderMiddleware(object):
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
+        spider.logger.debug('response，请求URL：%s' % request.url)
         return response
 
     def process_exception(self, request, exception, spider):
@@ -97,6 +99,7 @@ class CaoliuDownloaderMiddleware(object):
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain
         # - return a Request object: stops process_exception() chain
+        spider.logger.debug('exception，请求URL：%s' % request.url)
         pass
 
     def spider_opened(self, spider):
