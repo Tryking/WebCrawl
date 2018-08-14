@@ -19,7 +19,7 @@ class FacetiaeSpider(scrapy.Spider):
         os.mkdir('logs')
     init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + 'facetiae_spider' + ".log")
     init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + 'facetiae_spider' + "_error.log")
-    name = "facetiae_spider"
+    name = "caoliu_facetiae_spider"
     host = "http://t66y.com"
 
     def start_requests(self):

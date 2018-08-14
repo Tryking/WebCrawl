@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for CaoLiu project
+# Scrapy settings for Porn project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,13 +9,13 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'CaoLiu'
+BOT_NAME = 'Porn'
 
-SPIDER_MODULES = ['CaoLiu.spiders']
-NEWSPIDER_MODULE = 'CaoLiu.spiders'
+SPIDER_MODULES = ['Porn.spiders']
+NEWSPIDER_MODULE = 'Porn.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'CaoLiu (+http://www.yourdomain.com)'
+# USER_AGENT = 'Porn (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -46,13 +46,13 @@ CONCURRENT_REQUESTS = 8
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'CaoLiu.middlewares.CaoliuSpiderMiddleware': 543,
+#    'Porn.middlewares.CaoliuSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'CaoLiu.middlewares.CaoliuDownloaderMiddleware': 543,
+    'Porn.middlewares.CaoliuDownloaderMiddleware': 543,
 }
 
 # Enable or disable extensions
@@ -64,7 +64,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES = {
-#    'CaoLiu.pipelines.CaoliuPipeline': 300,
+#    'Porn.pipelines.CaoliuPipeline': 300,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
