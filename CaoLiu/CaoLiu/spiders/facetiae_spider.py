@@ -8,9 +8,17 @@ import scrapy
 from libs.common import *
 
 SAVE_DIR = 'datas'
+# 这些帖子虽然满足条件，但是不获取
+DONOT_FETCH_POST = ['■■■ 來訪者必看的內容 - 使你更快速上手 <隨時更新> ■■■',
+                    '文區版規 / 文區督查貼(2014.01.17更新)', '关于论坛的搜索功能',
+                    '发帖前必读', '文学区违规举报专贴-----置頂版規有新更新（藍色）']
 
 
 class FacetiaeSpider(scrapy.Spider):
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + 'facetiae_spider' + ".log")
+    init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + 'facetiae_spider' + "_error.log")
     name = "facetiae_spider"
     host = "http://t66y.com"
 
@@ -22,24 +30,30 @@ class FacetiaeSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, errback=self.handle_failure)
 
     def parse(self, response):
-        urls = response.xpath('//*[contains(@class, "tr3 t_one")]//h3//@href').extract()
-        for url in urls[:]:
-            if 'htm_data' not in url:
-                urls.remove(url)
+        titles = response.xpath('//*[contains(@class, "tr3 t_one")]//h3')
+        for title in titles:
+            text = title.xpath('.//text()').extract_first()
+            url = title.xpath('.//@href').extract_first()
+            if not url or 'htm_data' not in url or text in DONOT_FETCH_POST:
                 continue
-            yield scrapy.Request(self.host + '/' + url, callback=self.parse_post, dont_filter=True)
+            else:
+                yield scrapy.Request(self.host + '/' + url, meta={'title': text, 'page': 1}, callback=self.parse_post, dont_filter=True)
         # 获取目录列表的下一页，添加到请求中
         next_pages = response.xpath('//*[contains(text(), "下一頁")]/@href').extract()
         if len(next_pages) >= 1:
             yield scrapy.Request(self.host + '/' + next_pages[0], callback=self.parse, errback=self.handle_failure, dont_filter=True)
 
     def parse_post(self, response):
+        title = response.meta['title']
+        page = response.meta['page']
         if not os.path.exists(SAVE_DIR):
             os.mkdir(SAVE_DIR)
-        title = response.xpath('//*[@class="tr1 do_not_catch"]//h4/text()').extract_first()
+        if not title:
+            title = response.xpath('//*[@class="tr1 do_not_catch"]//h4/text()').extract_first()
         if not title:
             title = response.xpath('//*[@id="main"]/form/div[@class="t"]/table')
             title = title.xpath('string(.)').extract_first().strip()
+        self.debug('title: %s, page: %s' % (str(title), str(page)))
         content = response.xpath('//div[@class="tpc_content do_not_catch"]').extract()
         ptime = response.xpath('(//*[@class="tr1"])[1]//*[@class="tipad"]//text()').extract()
         ptime = ''.join(ptime)
@@ -58,13 +72,28 @@ class FacetiaeSpider(scrapy.Spider):
         next_page_url = response.xpath('//*[contains(text(), "下一頁")]/@href').extract_first()
         if next_page_url:
             next_page_url = next_page_url.replace('../../../', '')
-            self.logger.debug('下一页：%s' % next_page_url)
-            yield scrapy.Request(self.host + '/' + next_page_url, callback=self.parse_post, errback=self.handle_failure,
+            self.debug('下一页：%s' % next_page_url)
+            yield scrapy.Request(self.host + '/' + next_page_url, meta={'title': title, 'page': page + 1}, callback=self.parse_post,
+                                 errback=self.handle_failure,
                                  dont_filter=True)
 
     def handle_failure(self, failure):
         url = failure.request.url
-        if 'page' in url:
-            yield scrapy.Request(url, callback=self.parse, errback=self.handle_failure, dont_filter=True)
+
+    @staticmethod
+    def write_file_log(msg, level='error'):
+        filename = os.path.split(__file__)[1]
+        if level == 'debug':
+            logging.getLogger().debug('File:' + filename + ': ' + msg)
+        elif level == 'warning':
+            logging.getLogger().warning('File:' + filename + ': ' + msg)
         else:
-            yield scrapy.Request(url, callback=self.parse_post, errback=self.handle_failure, dont_filter=True)
+            logging.getLogger().error('File:' + filename + ': ' + msg)
+
+    # 调试日志
+    def debug(self, msg):
+        self.write_file_log(msg, 'debug')
+
+    # 错误日志
+    def error(self, msg):
+        self.write_file_log(msg, 'error')
