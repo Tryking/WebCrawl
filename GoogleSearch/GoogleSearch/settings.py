@@ -18,7 +18,7 @@ NEWSPIDER_MODULE = 'GoogleSearch.spiders'
 # USER_AGENT = 'GoogleSearch (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -68,7 +68,7 @@ ITEM_PIPELINES = {
     # 'GoogleSearch.pipelines.GooglesearchPipeline': 300,
 }
 
-IMAGES_STORE = '/google_search/images'
+IMAGES_STORE = 'google_search/images'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),
