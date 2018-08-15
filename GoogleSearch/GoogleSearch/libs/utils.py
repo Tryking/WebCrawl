@@ -12,6 +12,8 @@ def check_file_suffix(file_name, suffix):
     :return:
     """
     rsplit = str(file_name).rsplit('.', 1)
+    if suffix in ['jpg', 'jpeg']:
+        return rsplit[len(rsplit) - 1] in ['jpg', 'jpeg']
     return rsplit[len(rsplit) - 1] == suffix
 
 
@@ -22,7 +24,7 @@ def check_img_file():
     :return:
     """
     # 要检测的文件夹
-    path = '../google_data'
+    path = '../../../pornhub/pornhub/pornhub/images/full'
     dirs = os.listdir(path)
     i = 0
     for file in dirs:
