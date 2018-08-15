@@ -4,8 +4,10 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+from urllib.parse import urlparse
 
 from scrapy import signals
+from libs.common import *
 
 
 class GooglesearchSpiderMiddleware(object):
@@ -78,6 +80,14 @@ class GooglesearchDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+        o = urlparse(request.url)
+        ref = o.scheme + '://' + o.hostname
+        # ref = 'https://www.google.com'
+        request.meta['proxy'] = '127.0.0.1:1080'
+
+        request.headers.setdefault('User-Agent', get_user_agent())
+        request.headers.setdefault('referer', ref)
+        spider.logger.debug('请求URL：%s' % request.url)
         return None
 
     def process_response(self, request, response, spider):
@@ -87,6 +97,7 @@ class GooglesearchDownloaderMiddleware(object):
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
+        spider.logger.debug('response，请求URL：%s' % request.url)
         return response
 
     def process_exception(self, request, exception, spider):
@@ -97,6 +108,7 @@ class GooglesearchDownloaderMiddleware(object):
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain
         # - return a Request object: stops process_exception() chain
+        spider.logger.debug('exception，请求URL：%s' % request.url)
         pass
 
     def spider_opened(self, spider):
