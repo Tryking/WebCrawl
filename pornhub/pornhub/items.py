@@ -17,4 +17,5 @@ class PornhubItem(scrapy.Item):
 class MyItem(scrapy.Item):
     image_urls = scrapy.Field()
     images = scrapy.Field()
+    # 文件保存的子文件（在 IMAGES_STORE 指定下的子文件中）
     save_sub_dir = scrapy.Field()
