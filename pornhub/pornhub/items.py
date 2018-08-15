@@ -17,3 +17,4 @@ class PornhubItem(scrapy.Item):
 class MyItem(scrapy.Item):
     image_urls = scrapy.Field()
     images = scrapy.Field()
+    save_sub_dir = scrapy.Field()

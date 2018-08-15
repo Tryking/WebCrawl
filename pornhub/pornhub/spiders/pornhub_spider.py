@@ -51,4 +51,5 @@ class PornhubSpiderSpider(scrapy.Spider):
             urls.append(url)
         item = MyItem()
         item['image_urls'] = urls
+        item['save_sub_dir'] = 'straight'
         yield item

@@ -66,8 +66,9 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 ITEM_PIPELINES = {
-    'scrapy.pipelines.images.ImagesPipeline': 1,
-    'pornhub.pipelines.PornhubPipeline': 300,
+    # 'scrapy.pipelines.images.ImagesPipeline': 1,
+    # 使用自定义的，可以将不同种类的放入不同的文件
+    'pornhub.pipelines.MyImagesPipeline': 1,
 }
 
 IMAGES_STORE = 'pornhub/images'
