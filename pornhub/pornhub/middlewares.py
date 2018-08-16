@@ -6,7 +6,10 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 import json
 
+import requests
 from scrapy import signals
+
+from settings import PROXY_URL
 from .libs.common import *
 
 
@@ -58,10 +61,22 @@ class PornhubSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
+logger = logging.getLogger(__name__)
+
+
 class PornhubDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
+
+    def __init__(self):
+        # 更新IP最小间隔时长（5分钟）
+        self.get_proxy_interval = 5 * 60
+        self.proxy_url = PROXY_URL
+        self.proxys = list()
+        self.need_get_proxy_interval = False
+        self.last_update_proxy = 0
+
     """ 换Cookie """
     cookie = {
         'platform': 'pc',
@@ -91,7 +106,16 @@ class PornhubDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        request.meta['proxy'] = get_proxy()
+
+        self.update_ip_proxys()
+        if len(self.proxys) > 0:
+            proxy = random.choice(self.proxys)
+            spider.logger.info('使用代理>>>>>>>>>>' + proxy + '，剩余代理：' + str(len(self.proxys)))
+            request.meta['proxy'] = proxy
+        else:
+            if request.meta.get('proxy'):
+                del request.meta["proxy"]
+            spider.logger.info('使用本地>>>>>>>>>>，剩余代理：' + str(len(self.proxys)))
         bs = ''
         for i in range(32):
             bs += chr(random.randint(97, 122))
@@ -119,3 +143,20 @@ class PornhubDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+    def update_ip_proxys(self):
+        if self.need_get_proxy_interval or int(time.time() - self.last_update_proxy) > self.get_proxy_interval:
+            proxys = requests.get(self.proxy_url).text
+            proxys = json.loads(proxys)
+            if len(proxys) < 50:
+                # 小于50说明库里的IP不够用了，不能一直去访问获取，应该间隔5分钟后再去获取
+                self.need_get_proxy_interval = True
+            else:
+                self.need_get_proxy_interval = False
+            self.last_update_proxy = time.time()
+            logger.info("更新IP池，获取IP数量为：%s" % str(len(proxys)))
+            for proxy in proxys:
+                if judge_legal_ip(proxy[0]):
+                    proxy = 'https://%s:%s' % (proxy[0], proxy[1])
+                self.proxys.append(proxy)
+            self.proxys = list(set(self.proxys))

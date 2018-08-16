@@ -112,6 +112,21 @@ def get_num_from_str(str):
     return int(''.join(nums))
 
 
+def judge_legal_ip(one_str):
+    """
+    正则匹配方法
+    判断一个字符串是否是合法IP地址
+    """
+    try:
+        compile_ip = re.compile('^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$')
+        if compile_ip.match(one_str):
+            return True
+        else:
+            return False
+    except Exception as e:
+        raise e
+
+
 def get_host_ip():
     """
     查询本机ip地址

@@ -21,7 +21,7 @@ NEWSPIDER_MODULE = 'pornhub.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 1
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -101,3 +101,5 @@ IMAGES_THUMBS = {
 
 # 超时
 DOWNLOAD_TIMEOUT = 30
+
+PROXY_URL = 'http://123.207.124.221:8000?count=200'

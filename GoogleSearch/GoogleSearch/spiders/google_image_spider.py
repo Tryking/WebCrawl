@@ -2,10 +2,6 @@
 Google 搜索图片Spider
 """
 from items import MyItem
-
-"""
-草榴社区 > 成人文学交流区
-"""
 import os
 import re
 
@@ -23,19 +19,23 @@ class GoogleImageSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'http://image.baidu.com/search/index?tn=baiduimage&ps=1&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=高圆圆'
+            'https://www.baidu.com'
         ]
         for url in urls:
             yield scrapy.Request(url=url, headers=get_headers(), callback=self.parse, errback=self.handle_failure)
 
     def parse(self, response):
-        result = response.text
-        pattern_pic = '"objURL":"(.*?)",'
-        pic_list = re.findall(pattern_pic, result, re.S)
-
-        item = MyItem()
-        item['image_urls'] = pic_list
-        yield item
+        dirs = os.listdir('.')
+        for file in dirs:
+            if '_url' in file:
+                with open(file=file, mode='r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    urls = list()
+                    for line in lines:
+                        urls.append(line.strip())
+                    item = MyItem()
+                    item['image_urls'] = urls
+                    yield item
 
     def handle_failure(self, failure):
         url = failure.request.url

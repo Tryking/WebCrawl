@@ -12,9 +12,9 @@ TAGS = ['Tits', 'Ass', 'Pussy', 'Amateur', 'Dick', 'Hot', 'Teen', 'Hentai', 'Sex
         'Brunette', 'Asian', 'MILF', 'Cumshot', 'Pornstar', 'Hardcore', 'Celebrity', 'Lesbian', 'Ebony', 'Fetish', 'BBW', 'Masturbation',
         'Facial', 'Tribute', 'BDSM']
 
-PROXY = None
+PROXY = '127.0.0.1:1080'
 # 遇到错误后休息时长
-EXCEPTION_SLEEP_INTERVAL = 10
+EXCEPTION_SLEEP_INTERVAL = 60
 
 
 class PornhubSpiderSelenium:
@@ -64,12 +64,14 @@ class PornhubSpiderSelenium:
             self.browser.close()
             self.browser.quit()
         self.browser = webdriver.PhantomJS(service_args=service_args)
+        # 设置超时选项（get网页超时）
+        self.browser.set_page_load_timeout(15)
 
     def init_browser(self, force_init=False):
         try:
             if not self.browser or force_init:
                 self.debug('>>> 初始化 browser ...')
-                self.get_browser_phantomjs()
+                self.get_browser_chrome()
         except Exception as e:
             self.error(str(e), get_current_func_name())
 
