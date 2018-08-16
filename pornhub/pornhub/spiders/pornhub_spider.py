@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from selenium import webdriver
 
-from items import MyItem
-from libs.common import *
+from ..items import MyItem
+from ..libs.common import *
 
 # 初始获取资源URL （https://www.pornhub.com/albums/straight?search=female）
 BASE_URL = 'https://www.pornhub.com/albums/%s?search=%s'

@@ -10,7 +10,7 @@ import scrapy
 from scrapy.http import Request
 from scrapy.utils.python import to_bytes
 from scrapy.pipelines.images import ImagesPipeline
-from libs.common import *
+from .libs.common import *
 
 
 class PornhubPipeline(object):
