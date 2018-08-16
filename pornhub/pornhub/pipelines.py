@@ -10,6 +10,7 @@ import scrapy
 from scrapy.http import Request
 from scrapy.utils.python import to_bytes
 from scrapy.pipelines.images import ImagesPipeline
+from libs.common import *
 
 
 class PornhubPipeline(object):
@@ -21,7 +22,9 @@ class MyImagesPipeline(ImagesPipeline):
 
     def get_media_requests(self, item, info):
         for image_url in item['image_urls']:
-            yield scrapy.Request(url=image_url, meta={'item': item})
+            headers = get_headers()
+            headers['Referer'] = item['referer']
+            yield scrapy.Request(url=image_url, headers=headers, meta={'item': item})
 
     def file_path(self, request, response=None, info=None):
         ## start of deprecation warning block (can be removed in the future)

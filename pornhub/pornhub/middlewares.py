@@ -6,6 +6,7 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from libs.common import *
 
 
 class PornhubSpiderMiddleware(object):
@@ -78,7 +79,7 @@ class PornhubDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        request.meta['proxy'] = '127.0.0.1:1087'
+        request.meta['proxy'] = get_proxy()
         return None
 
     def process_response(self, request, response, spider):

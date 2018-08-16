@@ -80,6 +80,30 @@ def get_standard_file_name(original_file_name):
     return original_file_name.strip()
 
 
+def remove_bracket(original_str):
+    """
+    移除字符串中括号以及之间的内容
+
+    https://dl.phncdn.com/pics/albums/006/542/202/102689682/(m=bKaz0Np)(mh=waVqbkwB3QiO7vdV)original_102689682.jpg
+    :param original_str: 原始字符串
+    :return: 修改后的字符串
+    """
+    if '(' in original_str and ')' in original_str:
+        start = original_str.split('(', maxsplit=1)
+        end = original_str.rsplit(')', maxsplit=1)
+        return start[0] + end[len(end) - 1]
+    else:
+        return original_str
+
+
+def get_proxy():
+    """
+    获取代理
+    :return:
+    """
+    return '127.0.0.1:1080'
+
+
 def get_num_from_str(str):
     """
     从给定的字符串中提取出数字
@@ -253,5 +277,5 @@ user_agent_list = [
 ]
 
 if __name__ == '__main__':
-    data = get_standard_file_name('www.baidu.com<<"""    ')
+    data = remove_bracket('https://dl.phncdn.com/pics/albums/006/542/202/102689682/(m=bKaz0Np)(mh=waVqbkwB3QiO7vdV)original_102689682.jpg')
     print(data)
