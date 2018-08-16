@@ -4,6 +4,7 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import json
 
 from scrapy import signals
 from .libs.common import *
@@ -61,6 +62,17 @@ class PornhubDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
+    """ 换Cookie """
+    cookie = {
+        'platform': 'pc',
+        'ss': '643809513213537437',
+        'bs': '%s',
+        'RNLBSERVERID': 'ded6832',
+        'g36FastPopSessionRequestNumber': '3',
+        'FPSRN': '1',
+        'performance_timing': 'other',
+        'RNKEY': '1583773*1720513:3356536873: 2136892448:1'
+    }
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -80,7 +92,11 @@ class PornhubDownloaderMiddleware(object):
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
         request.meta['proxy'] = get_proxy()
-        return None
+        bs = ''
+        for i in range(32):
+            bs += chr(random.randint(97, 122))
+        _cookie = json.dumps(self.cookie) % bs
+        request.cookies = json.loads(_cookie)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

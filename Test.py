@@ -1,5 +1,6 @@
 import requests
 
-url = 'https://cl.phncdn.com/pics/albums/015/955/552/192357462/original_192357462.jpg'
-split = url.rsplit('.', maxsplit=1)
-print(split)
+url = 'https://ci.phncdn.com/pics/albums/000/513/721/30461512/(m=e-yaaGqaa)(mh=739j3IZ81Z2uEfu4)original_30461512.jpg'
+get = requests.get(url=url)
+with open('test.jpg', mode='wb') as f:
+    f.write(get.content)

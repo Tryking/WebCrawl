@@ -14,7 +14,7 @@ TAGS = ['Tits', 'Ass', 'Pussy', 'Amateur', 'Dick', 'Hot', 'Teen', 'Hentai', 'Sex
         'Facial', 'Tribute', 'BDSM']
 
 
-class PornhubSpiderSpider(scrapy.Spider):
+class PornhubSpider(scrapy.Spider):
     if not os.path.exists('logs'):
         os.mkdir('logs')
     init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + 'facetiae_spider' + ".log")
