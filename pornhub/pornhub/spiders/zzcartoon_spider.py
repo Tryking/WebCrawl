@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+http://www.zzcartoon.com
+"""
 import scrapy
-
 from ..items import MyItem
 from ..libs.common import *
 

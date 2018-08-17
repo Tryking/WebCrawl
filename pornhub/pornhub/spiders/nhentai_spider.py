@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """
+成人动漫、动画及卡通色情网站 介绍
+https://theporndude.com/zh/hentai-porn-sites
+
 https://nhentai.net/
 """
 import scrapy
