@@ -100,6 +100,6 @@ IMAGES_THUMBS = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # 超时
-DOWNLOAD_TIMEOUT = 30
+DOWNLOAD_TIMEOUT = 15
 
 PROXY_URL = 'http://123.207.124.221:8000?count=200'
