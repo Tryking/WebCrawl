@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import requests
 from selenium import webdriver
 
 from libs.common import *
@@ -6,11 +7,14 @@ from libs.common import *
 # 初始获取资源URL （https://www.pornhub.com/albums/straight?search=female）
 BASE_URL = 'https://www.pornhub.com/albums/%s?search=%s'
 # 模型 misc-miscellaneous（混杂的）
-SEGMENTS = ['female']
+# SEGMENTS = ['female']
+SEGMENTS = ['female', 'straight', 'male', 'gay', 'transgender', 'misc', 'uncategorized']
 # 分类
-TAGS = ['Tits', 'Ass', 'Pussy', 'Amateur', 'Dick', 'Hot', 'Teen', 'Hentai', 'Sex', 'Boobs', 'Babe', 'Cum', 'Blonde', 'Blowjob', 'Anal', 'Black',
-        'Brunette', 'Asian', 'MILF', 'Cumshot', 'Pornstar', 'Hardcore', 'Celebrity', 'Lesbian', 'Ebony', 'Fetish', 'BBW', 'Masturbation',
-        'Facial', 'Tribute', 'BDSM']
+# TAGS = ['Tits', 'Ass', 'Pussy', 'Amateur', 'Dick', 'Hot', 'Teen', 'Hentai', 'Sex', 'Boobs', 'Babe', 'Cum', 'Blonde', 'Blowjob', 'Anal', 'Black',
+#         'Brunette', 'Asian', 'MILF', 'Cumshot', 'Pornstar', 'Hardcore', 'Celebrity', 'Lesbian', 'Ebony', 'Fetish', 'BBW', 'Masturbation',
+#         'Facial', 'Tribute', 'BDSM']
+# karton ,anime
+TAGS = ['anime']
 
 PROXY = '127.0.0.1:1080'
 # 遇到错误后休息时长
@@ -172,6 +176,44 @@ class PornhubSpiderSelenium:
     def error(self, msg, func_name=''):
         __module = "%s.%s" % (self.__module, func_name)
         self.write_file_log(msg, __module, 'error')
+
+    def download_images(self, imgs):
+        sess = requests.Session()
+        if not os.path.exists('images/transgender-karton'):
+            os.makedirs('images/transgender-karton')
+        requests_proxies = None
+        i = 0
+        has_save_images = list()
+        files = os.listdir('images' + os.path.sep + 'transgender-karton')
+        for file in files:
+            has_save_images.append(file.strip())
+        for img in imgs:
+            i += 1
+            self.debug('第 %s / %s 个' % (str(i), str(len(imgs))))
+            img = img.split('"')[-1].replace('\\', '')
+            try:
+                if get_standard_file_name(img) not in has_save_images:
+                    response = sess.get(img, timeout=5)
+                    if response.status_code == 200:
+                        img_content = response.content
+                        img_name = 'images/transgender-karton' + os.path.sep + get_standard_file_name(img)
+                        with open(img_name, 'wb') as f:
+                            f.write(img_content)
+                        self.debug('pic saved completed')
+                    else:
+                        self.debug('pic download fail: %s - %s' % (str(response.status_code), str(img)))
+                    time.sleep(1)
+            except Exception as e:
+                self.error('pic download fail: - %s' % (str(img)))
+        self.debug('all pics saved')
+
+    def download(self):
+        with open('url_file/transgender-karton', mode='r') as f:
+            lines = f.readlines()
+            urls = list()
+            for line in lines:
+                urls.append(line.strip())
+            self.download_images(urls)
 
 
 if __name__ == '__main__':

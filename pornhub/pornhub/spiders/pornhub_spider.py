@@ -17,29 +17,15 @@ TAGS = ['Tits', 'Ass', 'Pussy', 'Amateur', 'Dick', 'Hot', 'Teen', 'Hentai', 'Sex
 class PornhubSpider(scrapy.Spider):
     if not os.path.exists('logs'):
         os.mkdir('logs')
-    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + 'facetiae_spider' + ".log")
-    init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + 'facetiae_spider' + "_error.log")
+    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
+    init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
 
     name = 'pornhub_spider'
-    allowed_domains = ['https://www.pornhub.com/']
+    allowed_domains = ['pornhub.com']
     start_urls = ['https://www.pornhub.com/']
     HOST = 'https://www.pornhub.com'
 
     def start_requests(self):
-        # chrome_options = webdriver.ChromeOptions()
-        # prefs = {"profile.managed_default_content_settings.images": 2}
-        # chrome_options.add_experimental_option("prefs", prefs)
-        # browser = webdriver.Chrome(chrome_options=chrome_options)
-        #
-        # # 最大化页面，防止有的内容无法点击
-        # browser.maximize_window()
-        # browser.get(url=url)
-        # time.sleep(10)
-        # urls = browser.find_elements_by_xpath('//li[contains(@class,"photoAlbumListContainer")]/div/a')
-        # for url in urls:
-        #     url = url.get_attribute('href')
-        #     yield scrapy.Request(url=url, callback=self.parse, meta={'proxy': '127.0.0.1:1087'})
-
         for segment in SEGMENTS:
             for tag in TAGS:
                 url = BASE_URL % (segment, tag.lower())

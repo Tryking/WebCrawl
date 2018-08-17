@@ -107,20 +107,24 @@ class PornhubDownloaderMiddleware(object):
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
 
-        self.update_ip_proxys()
-        if len(self.proxys) > 0:
-            proxy = random.choice(self.proxys)
-            spider.logger.info('使用代理>>>>>>>>>>' + proxy + '，剩余代理：' + str(len(self.proxys)))
-            request.meta['proxy'] = proxy
-        else:
-            if request.meta.get('proxy'):
-                del request.meta["proxy"]
-            spider.logger.info('使用本地>>>>>>>>>>，剩余代理：' + str(len(self.proxys)))
-        bs = ''
-        for i in range(32):
-            bs += chr(random.randint(97, 122))
-        _cookie = json.dumps(self.cookie) % bs
-        request.cookies = json.loads(_cookie)
+        # self.update_ip_proxys()
+        # if len(self.proxys) > 0:
+        #     proxy = random.choice(self.proxys)
+        #     spider.logger.info('使用代理>>>>>>>>>>' + proxy + '，剩余代理：' + str(len(self.proxys)))
+        #     request.meta['proxy'] = proxy
+        # else:
+        #     if request.meta.get('proxy'):
+        #         del request.meta["proxy"]
+        #     spider.logger.info('使用本地>>>>>>>>>>，剩余代理：' + str(len(self.proxys)))
+
+        request.meta['proxy'] = get_proxy()
+
+        # Pornhub使用
+        # bs = ''
+        # for i in range(32):
+        #     bs += chr(random.randint(97, 122))
+        # _cookie = json.dumps(self.cookie) % bs
+        # request.cookies = json.loads(_cookie)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

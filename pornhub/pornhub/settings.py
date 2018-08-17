@@ -21,7 +21,7 @@ NEWSPIDER_MODULE = 'pornhub.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 4
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -71,7 +71,7 @@ ITEM_PIPELINES = {
     'pornhub.pipelines.MyImagesPipeline': 1,
 }
 
-IMAGES_STORE = 'pornhub/images'
+IMAGES_STORE = 'images/zzcartoon'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),
