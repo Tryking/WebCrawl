@@ -7,6 +7,11 @@ https://www.fanqianglu.com/free/cnnovel/  提供网址
 import scrapy
 from ..libs.common import *
 
+"""
+2018年8月17日21:45:19
+完成9300多部小说的抓取
+"""
+
 SAVE_DIR = 'texts' + os.path.sep + 'book3k'
 
 

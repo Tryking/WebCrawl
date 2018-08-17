@@ -6,6 +6,49 @@ import scrapy
 from ..items import MyItem
 from ..libs.common import *
 
+"""
+2018年8月17日16:45:13 运行一次
+
+2018-08-17 16:44:13 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/exception_count': 78,
+ 'downloader/exception_type_count/twisted.internet.error.TimeoutError': 69,
+ 'downloader/exception_type_count/twisted.web._newclient.ResponseFailed': 8,
+ 'downloader/exception_type_count/twisted.web._newclient.ResponseNeverReceived': 1,
+ 'downloader/request_bytes': 7267017,
+ 'downloader/request_count': 17616,
+ 'downloader/request_method_count/GET': 17616,
+ 'downloader/response_bytes': 7771649571,
+ 'downloader/response_count': 17538,
+ 'downloader/response_status_count/200': 14394,
+ 'downloader/response_status_count/404': 20,
+ 'downloader/response_status_count/500': 3124,
+ 'dupefilter/filtered': 26,
+ 'file_count': 13996,
+ 'file_status_count/downloaded': 13996,
+ 'finish_reason': 'shutdown',
+ 'finish_time': datetime.datetime(2018, 8, 17, 8, 44, 13, 718150),
+ 'httperror/response_ignored_count': 20,
+ 'httperror/response_ignored_status_count/404': 20,
+ 'item_scraped_count': 392,
+ 'log_count/CRITICAL': 8,
+ 'log_count/DEBUG': 33247,
+ 'log_count/INFO': 376,
+ 'log_count/WARNING': 154,
+ 'request_depth_max': 2,
+ 'response_received_count': 14555,
+ 'retry/count': 3058,
+ 'retry/max_reached': 144,
+ 'retry/reason_count/500 Internal Server Error': 2983,
+ 'retry/reason_count/twisted.internet.error.TimeoutError': 66,
+ 'retry/reason_count/twisted.web._newclient.ResponseFailed': 8,
+ 'retry/reason_count/twisted.web._newclient.ResponseNeverReceived': 1,
+ 'scheduler/dequeued': 501,
+ 'scheduler/dequeued/memory': 501,
+ 'scheduler/enqueued': 534,
+ 'scheduler/enqueued/memory': 534,
+ 'start_time': datetime.datetime(2018, 8, 17, 2, 50, 15, 68851)}
+"""
+
 
 class ZzcartoonSpider(scrapy.Spider):
     if not os.path.exists('logs'):
