@@ -6,6 +6,47 @@ import scrapy
 from ..items import MyItem
 from ..libs.common import *
 
+"""
+{'downloader/exception_count': 2198,
+ 'downloader/exception_type_count/twisted.internet.error.TimeoutError': 1748,
+ 'downloader/exception_type_count/twisted.web._newclient.ResponseFailed': 1,
+ 'downloader/exception_type_count/twisted.web._newclient.ResponseNeverReceived': 449,
+ 'downloader/request_bytes': 28346569,
+ 'downloader/request_count': 60877,
+ 'downloader/request_method_count/GET': 60877,
+ 'downloader/response_bytes': 6832528352,
+ 'downloader/response_count': 58679,
+ 'downloader/response_status_count/200': 58651,
+ 'downloader/response_status_count/404': 4,
+ 'downloader/response_status_count/504': 24,
+ 'dupefilter/filtered': 388,
+ 'file_count': 28246,
+ 'file_status_count/downloaded': 28243,
+ 'file_status_count/uptodate': 3,
+ 'finish_reason': 'shutdown',
+ 'finish_time': datetime.datetime(2018, 8, 18, 23, 27, 16, 587532),
+ 'item_scraped_count': 28431,
+ 'log_count/DEBUG': 129715,
+ 'log_count/ERROR': 10,
+ 'log_count/INFO': 1179,
+ 'log_count/WARNING': 186,
+ 'memusage/max': 291438592,
+ 'memusage/startup': 95256576,
+ 'request_depth_max': 11,
+ 'response_received_count': 58655,
+ 'retry/count': 2041,
+ 'retry/max_reached': 181,
+ 'retry/reason_count/504 Gateway Time-out': 24,
+ 'retry/reason_count/twisted.internet.error.TimeoutError': 1573,
+ 'retry/reason_count/twisted.web._newclient.ResponseFailed': 1,
+ 'retry/reason_count/twisted.web._newclient.ResponseNeverReceived': 443,
+ 'scheduler/dequeued': 30656,
+ 'scheduler/dequeued/disk': 30656,
+ 'scheduler/enqueued': 30895,
+ 'scheduler/enqueued/disk': 30895,
+ 'start_time': datetime.datetime(2018, 8, 18, 8, 3, 53, 671866)}
+"""
+
 
 class LusciousSpider(scrapy.Spider):
     if not os.path.exists('logs'):

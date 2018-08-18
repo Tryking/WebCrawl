@@ -6,6 +6,12 @@ import scrapy
 from ..items import MyItem
 from ..libs.common import *
 
+"""
+2018年08月19日07:44:41
+
+爬取49601个项目(有9.7w张图片)，程序卡死。
+"""
+
 
 class HentaifoxSpider(scrapy.Spider):
     if not os.path.exists('logs'):
