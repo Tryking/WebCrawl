@@ -71,7 +71,7 @@ ITEM_PIPELINES = {
     'porn.pipelines.MyImagesPipeline': 1,
 }
 
-IMAGES_STORE = 'images/zzcartoon'
+IMAGES_STORE = 'images/hentaifox'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),
@@ -100,6 +100,6 @@ IMAGES_THUMBS = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # 超时
-DOWNLOAD_TIMEOUT = 15
+DOWNLOAD_TIMEOUT = 25
 
 PROXY_URL = 'http://123.207.124.221:8000?count=200'

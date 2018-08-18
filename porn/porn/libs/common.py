@@ -101,7 +101,8 @@ def get_proxy():
     获取代理
     :return:
     """
-    return 'http://127.0.0.1:1080'
+    proxys = [None, 'http://127.0.0.1:1087']
+    return random.choice(proxys)
 
 
 def get_num_from_str(str):
