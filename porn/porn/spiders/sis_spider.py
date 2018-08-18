@@ -8,30 +8,34 @@ import scrapy
 from ..libs.common import *
 
 """
-2018-08-18 17:09:17 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/exception_count': 1,
- 'downloader/exception_type_count/twisted.internet.error.TimeoutError': 1,
- 'downloader/request_bytes': 112441,
- 'downloader/request_count': 281,
- 'downloader/request_method_count/GET': 281,
- 'downloader/response_bytes': 5182726,
- 'downloader/response_count': 280,
- 'downloader/response_status_count/200': 280,
+2018-08-18 19:54:57 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/exception_count': 14,
+ 'downloader/exception_type_count/twisted.internet.error.TimeoutError': 14,
+ 'downloader/request_bytes': 3989019,
+ 'downloader/request_count': 9771,
+ 'downloader/request_method_count/GET': 9771,
+ 'downloader/response_bytes': 204800542,
+ 'downloader/response_count': 9757,
+ 'downloader/response_status_count/200': 9755,
+ 'downloader/response_status_count/400': 2,
+ 'dupefilter/filtered': 270,
  'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2018, 8, 18, 9, 9, 17, 978818),
- 'log_count/DEBUG': 327,
- 'log_count/INFO': 13,
- 'memusage/max': 165904384,
- 'memusage/startup': 95772672,
- 'request_depth_max': 2,
- 'response_received_count': 280,
- 'retry/count': 1,
- 'retry/reason_count/twisted.internet.error.TimeoutError': 1,
- 'scheduler/dequeued': 281,
- 'scheduler/dequeued/disk': 281,
- 'scheduler/enqueued': 281,
- 'scheduler/enqueued/disk': 281,
- 'start_time': datetime.datetime(2018, 8, 18, 9, 4, 4, 883440)}
+ 'finish_time': datetime.datetime(2018, 8, 18, 11, 54, 57, 782747),
+ 'httperror/response_ignored_count': 2,
+ 'httperror/response_ignored_status_count/400': 2,
+ 'log_count/DEBUG': 9818,
+ 'log_count/INFO': 169,
+ 'memusage/max': 1065148416,
+ 'memusage/startup': 95342592,
+ 'request_depth_max': 90,
+ 'response_received_count': 9757,
+ 'retry/count': 14,
+ 'retry/reason_count/twisted.internet.error.TimeoutError': 14,
+ 'scheduler/dequeued': 9771,
+ 'scheduler/dequeued/disk': 9771,
+ 'scheduler/enqueued': 9771,
+ 'scheduler/enqueued/disk': 9771,
+ 'start_time': datetime.datetime(2018, 8, 18, 9, 15, 9, 436379)}
 """
 
 SAVE_DIR = 'texts' + os.path.sep + 'sis'
