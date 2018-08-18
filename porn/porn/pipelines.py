@@ -13,7 +13,7 @@ from scrapy.pipelines.images import ImagesPipeline
 from .libs.common import *
 
 
-class PornhubPipeline(object):
+class PornPipeline(object):
     def process_item(self, item, spider):
         return item
 

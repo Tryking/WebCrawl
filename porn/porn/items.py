@@ -8,7 +8,7 @@
 import scrapy
 
 
-class PornhubItem(scrapy.Item):
+class PornItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass

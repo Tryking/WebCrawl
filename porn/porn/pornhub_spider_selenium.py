@@ -5,7 +5,7 @@ from selenium import webdriver
 from libs.common import *
 
 # 初始获取资源URL （https://www.pornhub.com/albums/straight?search=female）
-BASE_URL = 'https://www.pornhub.com/albums/%s?search=%s'
+BASE_URL = 'https://www.porn.com/albums/%s?search=%s'
 # 模型 misc-miscellaneous（混杂的）
 # SEGMENTS = ['female']
 SEGMENTS = ['female', 'straight', 'male', 'gay', 'transgender', 'misc', 'uncategorized']
@@ -21,13 +21,13 @@ PROXY = '127.0.0.1:1080'
 EXCEPTION_SLEEP_INTERVAL = 60
 
 
-class PornhubSpiderSelenium:
+class PornSpiderSelenium:
     if not os.path.exists('logs'):
         os.mkdir('logs')
     init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
     init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
 
-    HOST = 'https://www.pornhub.com'
+    HOST = 'https://www.porn.com'
     save_file_name = 'default'
     if not os.path.exists('url_file'):
         os.mkdir('url_file')
@@ -217,5 +217,5 @@ class PornhubSpiderSelenium:
 
 
 if __name__ == '__main__':
-    spider = PornhubSpiderSelenium()
+    spider = PornSpiderSelenium()
     spider.start_requests()

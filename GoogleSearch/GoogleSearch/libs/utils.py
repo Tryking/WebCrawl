@@ -24,7 +24,7 @@ def check_img_file():
     :return:
     """
     # 要检测的文件夹
-    path = '../../../pornhub/pornhub/pornhub/images/full'
+    path = '../../../porn/porn/porn/images/full'
     dirs = os.listdir(path)
     i = 0
     for file in dirs:

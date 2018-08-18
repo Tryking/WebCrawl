@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-https://www.pornhub.com/
+https://www.porn.com/
 """
 import scrapy
 from ..items import MyItem
 from ..libs.common import *
 
 # 初始获取资源URL （https://www.pornhub.com/albums/straight?search=female）
-BASE_URL = 'https://www.pornhub.com/albums/%s?search=%s'
+BASE_URL = 'https://www.porn.com/albums/%s?search=%s'
 # 模型 misc-miscellaneous（混杂的）
 SEGMENTS = ['female', 'straight', 'male', 'gay', 'transgender', 'misc', 'uncategorized']
 # 分类
@@ -23,9 +23,9 @@ class PornhubSpider(scrapy.Spider):
     init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
 
     name = 'pornhub_spider'
-    allowed_domains = ['pornhub.com']
-    start_urls = ['https://www.pornhub.com/']
-    HOST = 'https://www.pornhub.com'
+    allowed_domains = ['porn.com']
+    start_urls = ['https://www.porn.com/']
+    HOST = 'https://www.porn.com'
 
     def start_requests(self):
         for segment in SEGMENTS:

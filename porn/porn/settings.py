@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for pornhub project
+# Scrapy settings for porn project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,13 +9,13 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'pornhub'
+BOT_NAME = 'porn'
 
-SPIDER_MODULES = ['pornhub.spiders']
-NEWSPIDER_MODULE = 'pornhub.spiders'
+SPIDER_MODULES = ['porn.spiders']
+NEWSPIDER_MODULE = 'porn.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'pornhub (+http://www.yourdomain.com)'
+# USER_AGENT = 'porn (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -47,13 +47,13 @@ DEFAULT_REQUEST_HEADERS = {
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'pornhub.middlewares.PornhubSpiderMiddleware': 543,
+#    'porn.middlewares.PornSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'pornhub.middlewares.PornhubDownloaderMiddleware': 543,
+    'porn.middlewares.PornDownloaderMiddleware': 543,
 }
 
 # Enable or disable extensions
@@ -68,7 +68,7 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     # 'scrapy.pipelines.images.ImagesPipeline': 1,
     # 使用自定义的，可以将不同种类的放入不同的文件
-    'pornhub.pipelines.MyImagesPipeline': 1,
+    'porn.pipelines.MyImagesPipeline': 1,
 }
 
 IMAGES_STORE = 'images/zzcartoon'

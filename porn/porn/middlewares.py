@@ -13,7 +13,7 @@ from settings import PROXY_URL
 from .libs.common import *
 
 
-class PornhubSpiderMiddleware(object):
+class PornSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -64,7 +64,7 @@ class PornhubSpiderMiddleware(object):
 logger = logging.getLogger(__name__)
 
 
-class PornhubDownloaderMiddleware(object):
+class PornDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
