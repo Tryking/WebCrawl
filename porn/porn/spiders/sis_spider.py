@@ -56,7 +56,7 @@ class Abc111Spider(scrapy.Spider):
         for url in type_urls:
             if self.HOST not in url:
                 url = self.HOST + url
-            yield scrapy.Request(url=url, callback=self.parse_title_list, headers=get_headers())
+            yield scrapy.Request(url=url, callback=self.parse_title_list, dont_filter=True, headers=get_headers())
 
     def parse_title_list(self, response):
         articles = response.xpath('//td[@class="entry-content"]/a')
@@ -73,6 +73,11 @@ class Abc111Spider(scrapy.Spider):
                     url = self.HOST + url
                 yield scrapy.Request(url=url, callback=self.parse_article,
                                      meta={'category': category, 'title': title_txt}, headers=get_headers())
+        next_page_url = response.xpath('//a[text()="下頁"]/@href').extract_first()
+        if next_page_url:
+            if self.HOST not in next_page_url:
+                next_page_url = self.HOST + next_page_url
+            yield scrapy.Request(url=next_page_url, callback=self.parse_title_list, headers=get_headers())
 
     def parse_article(self, response):
         category = response.meta['category']
