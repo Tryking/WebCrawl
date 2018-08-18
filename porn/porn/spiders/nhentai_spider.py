@@ -34,7 +34,6 @@ class NhentaiSpider(scrapy.Spider):
             yield scrapy.Request(url=next_url, callback=self.parse, meta={'proxy': get_proxy()}, headers=get_headers())
 
     def parse_album(self, response):
-        # 这个获取逇是图片的详情页面，在这里面再获取图片的比较高清的图
         image_detail_urls = response.xpath('//div[@id="thumbnail-container"]/div[@class="thumb-container"]/a/img/@data-src').extract()
         if image_detail_urls and len(image_detail_urls) > 0:
             item = MyItem()
