@@ -8,6 +8,46 @@ from ..items import MyItem
 from ..libs.common import *
 
 """
+2018-08-21 06:58:31 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/exception_count': 7119,
+ 'downloader/exception_type_count/twisted.internet.error.TimeoutError': 7102,
+ 'downloader/exception_type_count/twisted.web._newclient.ResponseFailed': 17,
+ 'downloader/request_bytes': 9546975,
+ 'downloader/request_count': 25400,
+ 'downloader/request_method_count/GET': 25400,
+ 'downloader/response_bytes': 3407215525,
+ 'downloader/response_count': 18281,
+ 'downloader/response_status_count/200': 15474,
+ 'downloader/response_status_count/301': 2,
+ 'downloader/response_status_count/404': 277,
+ 'downloader/response_status_count/500': 2526,
+ 'downloader/response_status_count/504': 2,
+ 'dupefilter/filtered': 19608,
+ 'file_count': 13060,
+ 'file_status_count/downloaded': 13060,
+ 'finish_reason': 'shutdown',
+ 'finish_time': datetime.datetime(2018, 8, 20, 22, 58, 31, 357909),
+ 'httperror/response_ignored_count': 1,
+ 'httperror/response_ignored_status_count/500': 1,
+ 'item_scraped_count': 2298,
+ 'log_count/DEBUG': 40812,
+ 'log_count/INFO': 519,
+ 'log_count/WARNING': 1132,
+ 'memusage/max': 1029222400,
+ 'memusage/startup': 95383552,
+ 'request_depth_max': 26,
+ 'response_received_count': 15713,
+ 'retry/count': 8808,
+ 'retry/max_reached': 839,
+ 'retry/reason_count/500 Internal Server Error': 2519,
+ 'retry/reason_count/504 Gateway Time-out': 2,
+ 'retry/reason_count/twisted.internet.error.TimeoutError': 6271,
+ 'retry/reason_count/twisted.web._newclient.ResponseFailed': 16,
+ 'scheduler/dequeued': 4906,
+ 'scheduler/dequeued/disk': 4906,
+ 'scheduler/enqueued': 7617,
+ 'scheduler/enqueued/disk': 7617,
+ 'start_time': datetime.datetime(2018, 8, 20, 14, 28, 40, 30561)}
 
 """
 # xingganmeinvxiezhen 美女图片
