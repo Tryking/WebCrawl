@@ -15,10 +15,10 @@ DONOT_FETCH_POST = ['■■■ 來訪者必看的內容 - 使你更快速上手 
 
 
 class FacetiaeSpider(scrapy.Spider):
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + 'facetiae_spider' + ".log")
-    init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + 'facetiae_spider' + "_error.log")
+    # if not os.path.exists('logs'):
+    #     os.mkdir('logs')
+    # init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + 'facetiae_spider' + ".log")
+    # init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + 'facetiae_spider' + "_error.log")
     name = "caoliu_facetiae_spider"
     host = "http://t66y.com"
 
