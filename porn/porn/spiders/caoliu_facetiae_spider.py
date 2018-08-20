@@ -5,7 +5,7 @@ import os
 import re
 
 import scrapy
-from libs.common import *
+from ..libs.common import *
 
 SAVE_DIR = 'datas'
 # 这些帖子虽然满足条件，但是不获取
