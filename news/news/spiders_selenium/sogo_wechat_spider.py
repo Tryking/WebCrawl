@@ -4,13 +4,16 @@ from bs4 import BeautifulSoup
 from news.news.libs.common import *
 
 """
+Sogo 的 微信搜索
+"""
+"""
 Bs4 文档：https://beautifulsoup.readthedocs.io/zh_CN/latest/
 """
 # 遇到错误后休息时长
 EXCEPTION_SLEEP_INTERVAL = 60
 
 
-class Kr36SpiderSelenium:
+class SogoWechatSpiderSelenium:
     if not os.path.exists('logs'):
         os.mkdir('logs')
     init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
@@ -37,7 +40,7 @@ class Kr36SpiderSelenium:
         prefs = {"profile.managed_default_content_settings.images": 2}
         if get_proxy():
             chrome_options.add_argument('--proxy-server={0}'.format(get_proxy()))
-        # chrome_options.add_experimental_option("prefs", prefs)
+        chrome_options.add_experimental_option("prefs", prefs)
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
 
     def get_browser_phantomjs(self):
@@ -179,5 +182,5 @@ class Kr36SpiderSelenium:
 
 
 if __name__ == '__main__':
-    spider = Kr36SpiderSelenium()
+    spider = SogoWechatSpiderSelenium()
     spider.start_requests()
