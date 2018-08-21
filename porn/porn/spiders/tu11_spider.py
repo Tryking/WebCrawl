@@ -8,6 +8,7 @@ from ..items import MyItem
 from ..libs.common import *
 
 """
+爬取时间长会限制IP
 2018-08-21 06:58:31 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
 {'downloader/exception_count': 7119,
  'downloader/exception_type_count/twisted.internet.error.TimeoutError': 7102,

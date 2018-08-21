@@ -71,7 +71,7 @@ ITEM_PIPELINES = {
     'porn.pipelines.MyImagesPipeline': 1,
 }
 
-IMAGES_STORE = 'images/tu11'
+IMAGES_STORE = 'images/tgirl'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),
