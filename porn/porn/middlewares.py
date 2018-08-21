@@ -9,7 +9,7 @@ import json
 import requests
 from scrapy import signals
 
-from settings import PROXY_URL
+from .settings import PROXY_URL
 from .libs.common import *
 
 

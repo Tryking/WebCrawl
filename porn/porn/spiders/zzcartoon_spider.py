@@ -51,10 +51,10 @@ from ..libs.common import *
 
 
 class ZzcartoonSpider(scrapy.Spider):
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
-    init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
+    # if not os.path.exists('logs'):
+    #     os.mkdir('logs')
+    # init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
+    # init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
 
     name = 'zzcartoon_spider'
     allowed_domains = ['zzcartoon.com']
