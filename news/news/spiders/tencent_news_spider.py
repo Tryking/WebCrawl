@@ -3,10 +3,9 @@
 腾讯新闻爬取
 https://new.qq.com/
 """
-import json
 
 import scrapy
-from ..libs.common import *
+from news.news.spiders_selenium.libs.common import *
 
 
 class StorySpider(scrapy.Spider):

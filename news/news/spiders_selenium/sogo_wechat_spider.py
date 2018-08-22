@@ -3,11 +3,12 @@ import pymongo
 
 from selenium import webdriver
 from bs4 import BeautifulSoup
-from news.news.libs.common import *
-from news.news.libs.settings import MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PWD, MONGODB_DBNAME
+from libs.common import *
+from libs.settings import MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PWD, MONGODB_DBNAME
+from selenium.webdriver import DesiredCapabilities
 
 """
-Sogo 的 微信搜索
+Sogou 的 微信搜索
 """
 """
 Bs4 文档：https://beautifulsoup.readthedocs.io/zh_CN/latest/
@@ -85,6 +86,7 @@ class SogoWechatSpiderSelenium:
                 self.debug('使用代理IP：%s' % proxy_ip)
                 chrome_options.add_argument('--proxy-server={0}'.format(proxy_ip))
         chrome_options.add_experimental_option("prefs", prefs)
+        chrome_options.add_argument('user-agent="%s"' % get_user_agent())
         self.browser = webdriver.Chrome(chrome_options=chrome_options)
 
     def close_browser(self):
@@ -93,6 +95,9 @@ class SogoWechatSpiderSelenium:
             self.browser.quit()
 
     def get_browser_phantomjs(self):
+        if self.browser:
+            self.browser.close()
+            self.browser.quit()
         service_args = None
         if IS_AUTO_CHANGE_IP:
             proxy_ip = get_available_ip_proxy()
@@ -111,10 +116,9 @@ class SogoWechatSpiderSelenium:
                 '--disk-cache=yes',  # 开启缓存（可选）
                 '--ignore-ssl-errors=true'  # 忽略https错误（可选）
             ]
-        if self.browser:
-            self.browser.close()
-            self.browser.quit()
-        self.browser = webdriver.PhantomJS(service_args=service_args)
+        dcap = dict(DesiredCapabilities.PHANTOMJS)
+        dcap["phantomjs.page.settings.userAgent"] = get_user_agent()
+        self.browser = webdriver.PhantomJS(service_args=service_args, desired_capabilities=dcap)
         # 设置超时选项（get网页超时）
         self.browser.set_page_load_timeout(15)
 
@@ -126,7 +130,7 @@ class SogoWechatSpiderSelenium:
         except Exception as e:
             self.error(str(e), get_current_func_name())
 
-    def judge_is_wechat_verify(self, browser):
+    def judge_is_wechat_verify(self, browser, url):
         """
         判断该当前微信网页是否在验证码网页（debug到有验证码的地方，出现了可以用于解除）
         :return:
@@ -136,7 +140,11 @@ class SogoWechatSpiderSelenium:
             # 出现了验证码页面
             if '验证码' in items[0].text:
                 # TODO： 到了这里告警解决验证码问题
-                return True
+                # 重新启动浏览器，并访问给定url
+                self.error('需要输入验证码，重启浏览器')
+                self.init_browser(force_init=True)
+                self.browser.get(url)
+                return False
         return False
 
     def start_requests(self):
@@ -204,7 +212,7 @@ class SogoWechatSpiderSelenium:
         """
         try:
             self.browser.get(url)
-            self.judge_is_wechat_verify(self.browser)
+            self.judge_is_wechat_verify(self.browser, url)
             # 公众号名称
             wechat_name = None
             try:
@@ -252,7 +260,7 @@ class SogoWechatSpiderSelenium:
         """
         try:
             self.browser.get(url)
-            self.judge_is_wechat_verify(self.browser)
+            self.judge_is_wechat_verify(self.browser, url=url)
             # 文章名称
             name = None
             publish_time = None

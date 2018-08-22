@@ -4,12 +4,10 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-import json
 
-import requests
 from scrapy import signals
 from settings import PROXY_URL
-from .libs.common import *
+from news.news.spiders_selenium.libs.common import *
 
 class NewsSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,

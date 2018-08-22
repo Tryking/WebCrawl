@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
 
-from news.news.libs.common import *
+from news.news.spiders_selenium.libs.common import *
 
 # 遇到错误后休息时长
 EXCEPTION_SLEEP_INTERVAL = 60

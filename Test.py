@@ -1,14 +1,25 @@
 import re
 # -!- coding: utf-8 -!-
+import numpy as np
 import requests
 
-BASE_URL = 'https://weixin.sogou.com/weixin?type=1&s_from=input&query=%s&ie=utf8&_sug_=y&_sug_type_=&w=01019900&sut=5243&sst0=1534837995239&lkt=0,0,0'
-keywords = ['爱']
-get = requests.get(url=BASE_URL % keywords[0])
-print(get.status_code)
-with open('test__', mode='a+', encoding='utf-8')as f:
-    f.write(str(get.content, encoding='utf-8'))
-
+# url = 'http://mp.weixin.qq.com/profile?src=3&timestamp=1534934117&ver=1&signature=Ek4PhlS3l5co0DN61nuiL7woaxOx9ve8VOClzbFtOkoLSCO96Ety4iPxGfPD1NGy0INc5mjRJMoJ*xIPW3G4Wg=='
 #
-# findall = re.findall(r'<script>var props=(.*)</script>', s)
-# print(findall)
+# for i in range(20):
+#     result = requests.get(url=url)
+#     with open('test.txt', mode='a+', encoding='utf-8') as f:
+#         f.write(result.text)
+#         print(result.text)
+
+VOCAB = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+VOCAB_LENGTH = len(VOCAB)
+CAPTCHA_LENGTH = 2
+text = '23'
+vector = np.zeros(CAPTCHA_LENGTH * VOCAB_LENGTH)
+print(vector)
+for i, c in enumerate(text):
+    print(i, c)
+    index = i * VOCAB_LENGTH + VOCAB.index(c)
+    print(index)
+    vector[index] = 1
+print(vector)

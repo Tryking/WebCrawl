@@ -3,10 +3,9 @@
 36 Kr 新闻爬取
 http://36kr.com/
 """
-import json
 
 import scrapy
-from ..libs.common import *
+from news.news.spiders_selenium.libs.common import *
 
 # 频道:
 # 23：大公司
