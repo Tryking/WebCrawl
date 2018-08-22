@@ -1,4 +1,5 @@
 import inspect
+import json
 import logging
 import logging.handlers
 import os
@@ -7,7 +8,10 @@ import socket
 import re
 import time
 
+import requests
 from fake_useragent import UserAgent
+
+PROXY_URL = 'http://123.207.124.221:8000?count=200'
 
 
 def init_log(console_level, file_level, logfile):
@@ -103,6 +107,57 @@ def get_proxy():
     """
     proxys = [None]
     return random.choice(proxys)
+
+
+def test_ip_available(proxy_ip, url='https://www.baidu.com'):
+    """
+    测试代理IP是否可用
+    :param ip:
+    :return:
+    """
+    try:
+        proxies = {"http": proxy_ip, "https": proxy_ip}
+        r = requests.get(url=url, headers=get_headers(), timeout=5,
+                         proxies=proxies)
+        if r.ok:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return False
+
+
+def get_available_ip_proxy():
+    """
+    获取可用IP（从IP池获取，并测试是否可用）
+    :return:
+    """
+    try:
+        proxys = requests.get(PROXY_URL).text
+        proxys = json.loads(proxys)
+        proxy_pool = list()
+        for proxy in proxys:
+            if judge_legal_ip(proxy[0]):
+                proxy = 'http://%s:%s' % (proxy[0], proxy[1])
+                proxy_pool.append(proxy)
+        # 找20次，如果没有可用IP则返回None
+        for i in range(20):
+            choice_ip = random.choice(proxy_pool)
+            if test_ip_available(choice_ip):
+                return choice_ip
+            else:
+                proxy_pool.remove(choice_ip)
+        return None
+    except Exception as e:
+        return None
+
+
+def get_udpate_time():
+    """
+    获取更新时间
+    :return:
+    """
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
 def get_num_from_str(str):

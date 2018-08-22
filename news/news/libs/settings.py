@@ -1,0 +1,7 @@
+MONGODB_HOST = '123.207.124.221'
+# MONGODB 端口号
+MONGODB_PORT = 27017
+# 数据库名称
+MONGODB_DBNAME = 'spider_content_security'
+MONGODB_USER = ''
+MONGODB_PWD = ''
