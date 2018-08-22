@@ -52,6 +52,8 @@ class MeiTuLuSpider(scrapy.Spider):
         # 多页
         other_pages = response.xpath('//div[@id="pages"]/a/@href').extract()
         for other_page in other_pages:
+            if self.HOST not in other_page:
+                other_page = self.HOST + other_page
             yield scrapy.Request(url=other_page, callback=self.parse_category,
                                  meta={'category': response.meta['category']}, headers=get_headers())
 
@@ -68,5 +70,5 @@ class MeiTuLuSpider(scrapy.Spider):
         for other_page in other_pages:
             if self.HOST not in other_page:
                 other_page = self.HOST + other_page
-            yield scrapy.Request(url=other_page, callback=self.parse_category,
+            yield scrapy.Request(url=other_page, callback=self.parse_album,
                                  meta={'category': response.meta['category']}, headers=get_headers())
