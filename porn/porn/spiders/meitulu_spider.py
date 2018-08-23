@@ -8,6 +8,43 @@ from ..items import MyItem
 from ..libs.common import *
 
 """
+/CONCURRENT_REQUESTS = 20       DOWNLOAD_DELAY = 0.3 不会被限制/
+scrapy.statscollectors 2018-08-23 19:16:25,775 INFO     Dumping Scrapy stats:
+{'downloader/exception_count': 136,
+ 'downloader/exception_type_count/twisted.internet.error.TimeoutError': 135,
+ 'downloader/exception_type_count/twisted.web._newclient.ResponseFailed': 1,
+ 'downloader/request_bytes': 99682543,
+ 'downloader/request_count': 278354,
+ 'downloader/request_method_count/GET': 278354,
+ 'downloader/response_bytes': 71208036837,
+ 'downloader/response_count': 278218,
+ 'downloader/response_status_count/200': 278216,
+ 'downloader/response_status_count/404': 1,
+ 'downloader/response_status_count/502': 1,
+ 'dupefilter/filtered': 873701,
+ 'file_count': 212541,
+ 'file_status_count/downloaded': 212541,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2018, 8, 23, 11, 16, 25, 773075),
+ 'httperror/response_ignored_count': 1,
+ 'httperror/response_ignored_status_count/404': 1,
+ 'item_scraped_count': 47927,
+ 'log_count/DEBUG': 538824,
+ 'log_count/INFO': 1737,
+ 'log_count/WARNING': 1,
+ 'memusage/max': 338391040,
+ 'memusage/startup': 69754880,
+ 'request_depth_max': 790,
+ 'response_received_count': 278217,
+ 'retry/count': 137,
+ 'retry/reason_count/502 Bad Gateway': 1,
+ 'retry/reason_count/twisted.internet.error.TimeoutError': 135,
+ 'retry/reason_count/twisted.web._newclient.ResponseFailed': 1,
+ 'scheduler/dequeued': 65689,
+ 'scheduler/dequeued/disk': 65689,
+ 'scheduler/enqueued': 48810,
+ 'scheduler/enqueued/disk': 48810,
+ 'start_time': datetime.datetime(2018, 8, 22, 6, 28, 57, 752216)}
 """
 
 

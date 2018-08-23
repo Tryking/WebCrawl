@@ -1,16 +1,15 @@
+import os
+import pickle
+import random
+
 from captcha.image import ImageCaptcha
 from PIL import Image
 import numpy as np
+from config import *
 
 """
 https://cuiqingcai.com/5709.html
 """
-# 验证码长度
-CAPTCHA_LENGTH = 2
-
-# 词表
-VOCAB = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-VOCAB_LENGTH = len(VOCAB)
 
 
 def generate_captcha(text='test'):
@@ -19,12 +18,15 @@ def generate_captcha(text='test'):
     :param text:
     :return:
     """
+    if not os.path.exists(CAPTCHA_IMAGE_SAVE_PATH):
+        os.mkdir(CAPTCHA_IMAGE_SAVE_PATH)
     image = ImageCaptcha()
     captcha = image.generate(text)
     captcha_image = Image.open(captcha)
-    captcha_image.show()
+    # show the image
+    # captcha_image.show()
     # 保存图片
-    captcha_image.save(text + '.jpg')
+    captcha_image.save(os.path.join(CAPTCHA_IMAGE_SAVE_PATH, text + '.jpg'))
 
     captcha_array = np.array(captcha_image)
     return captcha_array
@@ -51,7 +53,34 @@ def vec2text(vector):
     return text
 
 
+def get_random_text():
+    text = ''
+    for i in range(CAPTCHA_LENGTH):
+        text += random.choice(VOCAB)
+    return text
+
+
+def generate_data():
+    data_x, data_y = [], []
+
+    for i in range(DATA_LENGTH):
+        text = get_random_text()
+        captcha_array = generate_captcha(text)
+        vector = text2vec(text)
+        data_x.append(captcha_array)
+        data_y.append(vector)
+
+    # write data to pickle
+    if not os.path.exists(DATA_PATH):
+        os.makedirs(DATA_PATH)
+
+    x = np.asarray(data_x, np.float32)
+    y = np.asarray(data_y, np.float32)
+    with open(os.path.join(DATA_PATH, 'data.pkl'), 'wb')as f:
+        pickle.dump(x, f)
+        pickle.dump(y, f)
+
+
 if __name__ == '__main__':
-    vector = text2vec('1234')
-    text = vec2text(vector)
-    print(vector, text)
+    pass
+    # generate_data()

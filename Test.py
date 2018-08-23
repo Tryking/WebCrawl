@@ -1,3 +1,4 @@
+import math
 import re
 # -!- coding: utf-8 -!-
 import numpy as np
@@ -11,15 +12,4 @@ import requests
 #         f.write(result.text)
 #         print(result.text)
 
-VOCAB = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-VOCAB_LENGTH = len(VOCAB)
-CAPTCHA_LENGTH = 2
-text = '23'
-vector = np.zeros(CAPTCHA_LENGTH * VOCAB_LENGTH)
-print(vector)
-for i, c in enumerate(text):
-    print(i, c)
-    index = i * VOCAB_LENGTH + VOCAB.index(c)
-    print(index)
-    vector[index] = 1
-print(vector)
+print(math.ceil(5.36))

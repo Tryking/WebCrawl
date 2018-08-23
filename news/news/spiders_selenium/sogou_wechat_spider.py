@@ -24,7 +24,7 @@ BASE_URL = 'https://weixin.sogou.com/weixin?type=1&s_from=input&query=%s&ie=utf8
            'w=01019900&sut=1292&sst0=1534838560197&lkt=1,1534838560083,1534838560083'
 
 
-class SogoWechatSpiderSelenium:
+class SogouWechatSpiderSelenium:
     if not os.path.exists('logs'):
         os.mkdir('logs')
     init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
@@ -329,5 +329,5 @@ class SogoWechatSpiderSelenium:
 
 
 if __name__ == '__main__':
-    spider = SogoWechatSpiderSelenium()
+    spider = SogouWechatSpiderSelenium()
     spider.start_requests()
