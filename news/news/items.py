@@ -10,5 +10,13 @@ import scrapy
 
 class NewsItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    # 新闻名称
+    name = scrapy.Field()
+    # 新闻类型
+    article_type = scrapy.Field()
+    # 新闻标题
+    article_title = scrapy.Field()
+    # 新闻作者
+    article_author = scrapy.Field()
+    # 新闻内容
+    article_content = scrapy.Field()

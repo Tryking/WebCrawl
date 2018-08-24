@@ -46,14 +46,19 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-# SPIDER_MIDDLEWARES = {
-#    'news.middlewares.NewsSpiderMiddleware': 543,
-# }
+SPIDER_MIDDLEWARES = {
+    # 'news.middlewares.NewsSpiderMiddleware': 543,
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'news.middlewares.NewsDownloaderMiddleware': 543,
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
 # Enable or disable extensions
@@ -92,3 +97,15 @@ ITEM_PIPELINES = {
 # 超时
 DOWNLOAD_TIMEOUT = 25
 PROXY_URL = 'http://123.207.124.221:8000?count=200'
+
+# Splash
+SPLASH_URL = 'http://172.30.140.252:8050'
+
+# Mongo配置
+MONGODB_HOST = '123.207.124.221'
+# MONGODB 端口号
+MONGODB_PORT = 27017
+# 数据库名称
+MONGODB_DBNAME = 'spider_content_security'
+MONGODB_USER = ''
+MONGODB_PWD = ''

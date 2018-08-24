@@ -5,7 +5,7 @@ https://new.qq.com/
 """
 
 import scrapy
-from news.news.spiders_selenium.libs.common import *
+from ..libs.common import *
 
 
 class StorySpider(scrapy.Spider):
