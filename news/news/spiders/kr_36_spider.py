@@ -25,7 +25,7 @@ CHANNEL = {'23': '大公司', '221': '消费', '225': '娱乐', '218': '前沿�
 BASE_ULR = 'http://36kr.com/api/search-column/%s?per_page=%s&page=1'
 ARTICLE_URL = 'http://36kr.com/p/%s.html'
 
-NAME = 'kr36'
+NAME = 'news_kr30'
 
 
 class Kr36Spider(scrapy.Spider):
