@@ -173,6 +173,7 @@ class ToutiaoSoiderSelenium:
             self.error(str(e), get_current_func_name())
             time.sleep(EXCEPTION_SLEEP_INTERVAL)
             self.init_browser(force_init=True)
+            self.start_requests()
 
     @staticmethod
     def get_clean_name(original_title):
