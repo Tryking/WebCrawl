@@ -152,6 +152,16 @@ class ToutiaoSoiderSelenium:
                 name = name.text
                 if url and self.HOST in url:
                     items[name] = url
+
+            # 获取更多条目
+            category = self.browser.find_elements_by_xpath('//div[@class="wchannel-more-layer"]/ul/li/a')
+            for item in category:
+                url = item.get_attribute('href')
+                name = item.find_element_by_xpath('./span')
+                name = name.text
+                if url and self.HOST in url:
+                    items[name] = url
+
             for name, url in items.items():
                 # 处理单个条目的文章列表
                 self.handle_item(name, url)
