@@ -64,7 +64,8 @@ class ToutiaoSoiderSelenium:
         """
         self.db[DB_COLLECTION].update_one(filter={'source': source, 'article_title': article_title},
                                           update={'$set': {'article_content': article_content, 'source_type': source_type,
-                                                           'publish_time': publish_time, 'update_time': get_udpate_time()}},
+                                                           'publish_time': publish_time, 'update_time': get_udpate_time(),
+                                                           'update_date': get_before_date(before_day=0)}},
                                           upsert=True)
 
     def match_article(self, source='default', title='default'):
