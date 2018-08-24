@@ -13,3 +13,5 @@ import requests
 #         print(result.text)
 
 print(math.ceil(5.36))
+print(math.ceil(9 / 2))
+print(type(math.ceil(9 / 2)))
