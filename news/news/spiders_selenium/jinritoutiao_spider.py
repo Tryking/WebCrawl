@@ -256,8 +256,8 @@ class ToutiaoSoiderSelenium:
                     content = soup.select_one('.article-content')
                     article_content = list()
                     if len(content) > 0:
-                        article_title = get_standard_file_name(name)
-                        file_name = SAVE_FILE_PATH + os.path.sep + os.path.sep + article_title
+                        article_title = name
+                        file_name = SAVE_FILE_PATH + os.path.sep + os.path.sep + get_standard_file_name(name)
                         with open(file=file_name, mode='a+', encoding='utf-8') as f:
                             for child in content.stripped_strings:
                                 f.write(str(repr(child)).strip('\''))
