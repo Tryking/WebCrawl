@@ -30,6 +30,8 @@ SAVE_FILE_PATH = os.path.join('datas', 'jinritoutiao')
 
 DB_COLLECTION = 'jinritoutiao_article'
 
+PHANTOMJS_SLEEP_TIME = 3
+
 
 class ToutiaoSoiderSelenium:
     if not os.path.exists('logs'):
@@ -130,7 +132,7 @@ class ToutiaoSoiderSelenium:
         try:
             if not self.browser or force_init:
                 self.debug('>>> 初始化 browser ...')
-                self.get_browser_chrome()
+                self.get_browser_phantomjs()
         except Exception as e:
             self.error(str(e), get_current_func_name())
 
@@ -180,20 +182,29 @@ class ToutiaoSoiderSelenium:
         处理文章列表
         """
         try:
-            # 向下拉更新
-            # for __ in range(100):
-            # multiple scrolls needed to show all 400 images
-            # self.browser.execute_script("window.scrollBy(0, 1000000)")
-            # time.sleep(2)
-
             self.browser.get(url)
-            # 将滚动条移动到页面的底部（模拟按键 down）
-            for i in range(PRESS_DOWN_TIMES):
-                ActionChains(self.browser).key_down(Keys.DOWN).perform()
-                time.sleep(0.1)
-                if i % 100 == 0:
-                    self.debug('第 %s / %s 次' % (str(i), str(PRESS_DOWN_TIMES)))
-                    time.sleep(2)
+            # Phantomjs 不好识别
+            time.sleep(PHANTOMJS_SLEEP_TIME)
+            articles = self.browser.find_elements_by_xpath('//div[@class="rbox-inner"]')
+
+            if not articles or len(articles) == 0:
+                # 说明此页面不是标准内容页面，不处理
+                self.debug('%s 不是标准页面，不爬取' % name)
+                return False
+
+            # 向下拉更新
+            for __ in range(10):
+                # multiple scrolls needed to show all 400 images
+                self.browser.execute_script("window.scrollBy(0, 1000000)")
+                time.sleep(2)
+
+            # # 将滚动条移动到页面的底部（模拟按键 down）（在服务器上使用 Phantomjs 不管用）
+            # for i in range(PRESS_DOWN_TIMES):
+            #     ActionChains(self.browser).key_down(Keys.DOWN).perform()
+            #     time.sleep(0.1)
+            #     if i % 100 == 0:
+            #         self.debug('第 %s / %s 次' % (str(i), str(PRESS_DOWN_TIMES)))
+            #         time.sleep(2)
 
             articles = self.browser.find_elements_by_xpath('//div[@class="rbox-inner"]')
             urls = list()
@@ -219,6 +230,8 @@ class ToutiaoSoiderSelenium:
         """
         try:
             self.browser.get(url)
+            # Phantomjs 不好识别
+            time.sleep(PHANTOMJS_SLEEP_TIME)
             # 文章名称
             name = None
             publish_from = 'default'
