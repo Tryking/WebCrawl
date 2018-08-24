@@ -44,7 +44,7 @@ class Kr36Spider(scrapy.Spider):
 
     def start_requests(self):
         for channel in CHANNEL:
-            url = BASE_ULR % (channel, 20)
+            url = BASE_ULR % (channel, 50)
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
