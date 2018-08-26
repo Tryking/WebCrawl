@@ -90,7 +90,8 @@ class ToutiaoSpider(scrapy.Spider):
         for item in category:
             url = item.xpath('./@href').extract_first()
             name = item.xpath('./span/text()').extract_first()
-            if 'javascript' not in url:
+            # 不是今日头条的站内新闻
+            if 'javascript' not in url and 'www' not in url:
                 if url and self.HOST not in url:
                     url = self.HOST + url
                 result[name] = url
@@ -99,7 +100,7 @@ class ToutiaoSpider(scrapy.Spider):
         for item in category:
             url = item.xpath('./@href').extract_first()
             name = item.xpath('./span/text()').extract_first()
-            if 'javascript' not in url:
+            if 'javascript' not in url and 'www' not in url:
                 if url and self.HOST not in url:
                     url = self.HOST + url
                 result[name] = url
@@ -108,12 +109,11 @@ class ToutiaoSpider(scrapy.Spider):
             yield SplashRequest(url=result[item], callback=self.parse_article_list,
                                 # 必须有此属性，否则无法执行lua脚本
                                 endpoint='execute',
-                                meta={'article_type': result[item]},
+                                meta={'article_type': item},
                                 args={
                                     # optional; parameters passed to Splash HTTP API
                                     'lua_source': script,
                                     'flush_times': 10,
-
                                     # 'url' is prefilled from request url
                                     # 'http_method' is set to 'POST' for POST requests
                                     # 'body' is set to request body for POST requests
