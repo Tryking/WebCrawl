@@ -36,10 +36,10 @@ class NewsPipeline(object):
             # 新闻内容
             article_content = scrapy.Field()
         """
-        if item['name'] == 'news_kr30':
-            self.db['news_kr30'].update_one(filter={'article_title': item['article_title'], 'article_author': item['article_author']},
-                                            update={'$set': {'article_content': item['article_content'], 'article_type': item['article_type'],
-                                                             'update_time': get_udpate_time(), 'update_date': get_before_date(before_day=0)}},
-                                            upsert=True)
+        if item['name'] == 'news_kr30' or item['name'] == 'news_toutiao':
+            self.db[item['name']].update_one(filter={'article_title': item['article_title'], 'article_author': item['article_author']},
+                                             update={'$set': {'article_content': item['article_content'], 'article_type': item['article_type'],
+                                                              'update_time': get_udpate_time(), 'update_date': get_before_date(before_day=0)}},
+                                             upsert=True)
 
         return item

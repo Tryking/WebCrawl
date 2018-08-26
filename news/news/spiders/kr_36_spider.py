@@ -39,7 +39,8 @@ class Kr36Spider(scrapy.Spider):
     start_urls = ['http://36kr.com/']
     HOST = 'http://36kr.com'
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.db_monitor = DbMonitor()
 
     def start_requests(self):
