@@ -130,8 +130,12 @@ class ToutiaoSpider(scrapy.Spider):
 
         for article in articles:
             source_from = article.xpath('.//a[contains(@class, "source")]/text()').extract_first()
+            if source_from:
+                source_from = source_from.strip()
             source_from = self.get_clean_name(source_from)
             title = article.xpath('./div[@class="title-box"]/a/text()').extract_first()
+            if title:
+                title = title.strip()
             if not self.db_monitor.match_article(name='news_toutiao', author=source_from, title=title):
                 url = article.xpath('./div[@class="title-box"]/a/@href').extract_first()
                 if self.HOST not in url:
