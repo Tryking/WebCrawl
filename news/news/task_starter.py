@@ -45,9 +45,9 @@ class Master(object):
         __module = "%s.%s" % (self.__module, func_name)
         self.write_file_log(msg, __module, 'error')
 
-    def init_jinritoutiao_crawl(self):
+    def init_kr36_crawl(self):
         """
-        启动影视爬虫脚本
+        启动Kr36爬虫脚本
         """
         try:
             self.debug('Kr36 爬虫开始')
@@ -57,10 +57,23 @@ class Master(object):
         except Exception as e:
             self.error(str(e), get_current_func_name())
 
+    def init_toutiao_crawl(self):
+        """
+        启动今日头条爬虫脚本
+        """
+        try:
+            self.debug('头条 爬虫开始')
+            jinritoutiao_spider = subprocess.Popen(args=['scrapy', 'crawl', 'toutiao_spider'], cwd=TASK_PATH)
+            jinritoutiao_spider.wait()
+            self.debug('头条 爬虫结束')
+        except Exception as e:
+            self.error(str(e), get_current_func_name())
+
     def main(self):
         self.debug('>>>>>>>>>>running<<<<<<<<<<')
         try:
-            schedule.every(60).minutes.do(self.init_jinritoutiao_crawl)
+            schedule.every(60).minutes.do(self.init_kr36_crawl)
+            schedule.every(20).minutes.do(self.init_toutiao_crawl())
             while True:
                 schedule.run_pending()
                 time.sleep(1)
