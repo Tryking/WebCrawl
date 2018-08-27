@@ -19,3 +19,9 @@ db.getCollection('jinritoutiao_article').createIndex({'source':1,'article_title'
 # 一个作者一个文章唯一，插入前查找时速度快
 db.getCollection('news_kr30').createIndex({'article_author':1,'article_title': 1},{unique:true})
 """
+
+# news_toutiao
+"""
+# 一个作者一个文章唯一，插入前查找时速度快
+db.getCollection('news_toutiao').createIndex({'article_author':1,'article_title': 1},{unique:true})
+"""
