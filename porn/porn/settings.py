@@ -21,7 +21,7 @@ NEWSPIDER_MODULE = 'porn.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 8
+CONCURRENT_REQUESTS = 4
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -46,14 +46,19 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-# SPIDER_MIDDLEWARES = {
-#    'porn.middlewares.PornSpiderMiddleware': 543,
-# }
+SPIDER_MIDDLEWARES = {
+    # 'news.middlewares.NewsSpiderMiddleware': 543,
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'porn.middlewares.PornDownloaderMiddleware': 543,
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
 # Enable or disable extensions
@@ -71,7 +76,7 @@ ITEM_PIPELINES = {
     'porn.pipelines.MyImagesPipeline': 1,
 }
 
-IMAGES_STORE = 'images/meitulu'
+IMAGES_STORE = 'images/baidu'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),
@@ -103,3 +108,6 @@ IMAGES_THUMBS = {
 DOWNLOAD_TIMEOUT = 25
 
 PROXY_URL = 'http://123.207.124.221:8000?count=200'
+
+# Splash
+SPLASH_URL = 'http://172.30.140.252:8050'

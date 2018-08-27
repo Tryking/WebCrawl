@@ -23,6 +23,9 @@ SOURCE_FILE = '不限分类'
 BASE_URL = 'https://weixin.sogou.com/weixin?type=1&s_from=input&query=%s&ie=utf8&_sug_=y&_sug_type_=&' \
            'w=01019900&sut=1292&sst0=1534838560197&lkt=1,1534838560083,1534838560083'
 
+# 是否保存结果到本地
+IS_SAVE_ARTICLE_TO_LOCAL = False
+
 
 class SogouWechatSpiderSelenium:
     if not os.path.exists('logs'):
@@ -288,19 +291,21 @@ class SogouWechatSpiderSelenium:
                     # 文章内容
                     soup = BeautifulSoup(self.browser.page_source, 'lxml')
                     file_name = 'datas' + os.path.sep + get_standard_file_name(name) + '.html'
-                    with open(file=file_name, mode='a+', encoding='utf-8') as f:
-                        f.write(str(soup.prettify()))
+                    if IS_SAVE_ARTICLE_TO_LOCAL:
+                        with open(file=file_name, mode='a+', encoding='utf-8') as f:
+                            f.write(str(soup.prettify()))
 
                     content = soup.select_one('#js_content')
                     article_content = list()
                     if len(content) > 0:
                         article_title = get_standard_file_name(name)
                         file_name = 'datas' + os.path.sep + article_title
-                        with open(file=file_name, mode='a+', encoding='utf-8') as f:
-                            for child in content.stripped_strings:
-                                f.write(str(repr(child)).strip('\''))
-                                article_content.append(str(repr(child)).strip('\''))
-                                f.write('\n')
+                        if IS_SAVE_ARTICLE_TO_LOCAL:
+                            with open(file=file_name, mode='a+', encoding='utf-8') as f:
+                                for child in content.stripped_strings:
+                                    f.write(str(repr(child)).strip('\''))
+                                    article_content.append(str(repr(child)).strip('\''))
+                                    f.write('\n')
                         self.save_article(wechat_id, wechat_name, article_title, publish_time, '\n'.join(article_content))
         except Exception as e:
             self.error(str(e), get_current_func_name())

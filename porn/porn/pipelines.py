@@ -23,7 +23,8 @@ class MyImagesPipeline(ImagesPipeline):
     def get_media_requests(self, item, info):
         for image_url in item['image_urls']:
             headers = get_headers()
-            headers['Referer'] = item['referer']
+            if 'referer' in item:
+                headers['Referer'] = item['referer']
             yield scrapy.Request(url=image_url, headers=headers, meta={'item': item})
 
     def file_path(self, request, response=None, info=None):
