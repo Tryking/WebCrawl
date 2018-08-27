@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-百度搜索图片Spider
+百度搜索图片Spider（根据链接文件下载）
 """
 import scrapy
 
 from ..items import MyItem
 from ..libs.common import *
 
-Files = ['小孩.txt']
+Files = ['女人.txt']
 
 
 class BaiduSearchSpider(scrapy.Spider):

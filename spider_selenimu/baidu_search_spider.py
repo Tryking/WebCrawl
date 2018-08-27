@@ -12,7 +12,7 @@ from selenium.webdriver import DesiredCapabilities, ActionChains
 from selenium.webdriver.common.keys import Keys
 
 """
-百度图片搜索
+百度图片搜索（只保存图片链接到文件）
 """
 
 # 遇到错误后休息时长
@@ -27,7 +27,7 @@ SAVE_FILE_PATH = os.path.join('datas', 'jinritoutiao')
 
 PHANTOMJS_SLEEP_TIME = 3
 
-KEYWORDS = ['老人', '小孩', '成年人', '沙滩 人', '女人']
+KEYWORDS = ['女人']
 
 
 class BaiduSoiderSelenium:
@@ -109,9 +109,9 @@ class BaiduSoiderSelenium:
         """
         开始获取请求并处理搜索公众号结果
         """
-        try:
-            self.init_browser()
-            for keyword in KEYWORDS:
+        self.init_browser()
+        for keyword in KEYWORDS:
+            try:
                 url = BASE_URL % keyword
                 self.browser.get(url=url)
 
@@ -119,7 +119,7 @@ class BaiduSoiderSelenium:
                 for __ in range(30):
                     # multiple scrolls needed to show all 400 images
                     self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-                    time.sleep(2)
+                    time.sleep(1)
 
                 # # 将滚动条移动到页面的底部（模拟按键 down）（在服务器上使用 Phantomjs 不管用）
                 # for i in range(PRESS_DOWN_TIMES):
@@ -140,12 +140,11 @@ class BaiduSoiderSelenium:
                 for url in items:
                     # 处理图片详情
                     self.handle_item(url, keyword)
-            self.close_browser()
-        except Exception as e:
-            self.error(str(e), get_current_func_name())
-            time.sleep(EXCEPTION_SLEEP_INTERVAL)
-            self.init_browser(force_init=True)
-            self.start_requests()
+            except Exception as e:
+                self.error(str(e), get_current_func_name())
+                time.sleep(EXCEPTION_SLEEP_INTERVAL)
+                self.init_browser(force_init=True)
+        self.close_browser()
 
     @staticmethod
     def get_clean_name(original_title):
@@ -161,7 +160,7 @@ class BaiduSoiderSelenium:
             imgage_ori_url = self.browser.find_elements_by_xpath('//img[@id="hdFirstImgObj"]')
             if imgage_ori_url and len(imgage_ori_url) > 0:
                 imgage_ori_url = imgage_ori_url[0].get_attribute('src')
-                with open(keyword + '.txt', mode='a+', encoding='utf-8') as f:
+                with open(get_standard_file_name(keyword) + '.txt', mode='a+', encoding='utf-8') as f:
                     f.write(imgage_ori_url)
                     f.write('\n')
 
