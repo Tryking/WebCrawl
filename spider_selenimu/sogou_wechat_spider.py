@@ -143,6 +143,8 @@ class SogouWechatSpiderSelenium:
             # 出现了验证码页面
             if '验证码' in items[0].text:
                 # TODO： 到了这里告警解决验证码问题
+                # 识别验证码
+
                 # 重新启动浏览器，并访问给定url
                 self.error('需要输入验证码，重启浏览器')
                 self.init_browser(force_init=True)

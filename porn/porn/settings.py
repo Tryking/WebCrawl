@@ -26,7 +26,7 @@ CONCURRENT_REQUESTS = 4
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.5
+DOWNLOAD_DELAY = 0.8
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -76,7 +76,7 @@ ITEM_PIPELINES = {
     'porn.pipelines.MyImagesPipeline': 1,
 }
 
-IMAGES_STORE = 'images/baidu'
+IMAGES_STORE = 'images/file_url'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),
@@ -105,7 +105,7 @@ IMAGES_THUMBS = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # 超时
-DOWNLOAD_TIMEOUT = 25
+DOWNLOAD_TIMEOUT = 15
 
 PROXY_URL = 'http://123.207.124.221:8000?count=200'
 

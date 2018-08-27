@@ -26,7 +26,7 @@ def generate_captcha(text='test'):
     # show the image
     # captcha_image.show()
     # 保存图片
-    captcha_image.save(os.path.join(CAPTCHA_IMAGE_SAVE_PATH, text + '.jpg'))
+    captcha_image.save(os.path.join(CAPTCHA_IMAGE_SAVE_PATH, text + '.png'))
 
     captcha_array = np.array(captcha_image)
     return captcha_array
@@ -83,4 +83,4 @@ def generate_data():
 
 if __name__ == '__main__':
     pass
-    # generate_data()
+    generate_captcha('12')
