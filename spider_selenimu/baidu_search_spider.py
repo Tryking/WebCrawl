@@ -2,12 +2,8 @@
 import os
 import time
 
-import pymongo
-
 from selenium import webdriver
-from bs4 import BeautifulSoup
 from libs.common import *
-from libs.settings import MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PWD, MONGODB_DBNAME
 from selenium.webdriver import DesiredCapabilities, ActionChains
 from selenium.webdriver.common.keys import Keys
 
