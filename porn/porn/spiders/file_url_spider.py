@@ -7,7 +7,7 @@ import scrapy
 from ..items import MyItem
 from ..libs.common import *
 
-Files = ['fall11_result30_10w.txt']
+Files = ['fall11_result30_10w_15w.txt']
 
 
 class FileUrlSpider(scrapy.Spider):

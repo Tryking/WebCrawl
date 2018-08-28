@@ -47,10 +47,10 @@ scrapy.statscollectors 2018-08-21 01:30:31,848 INFO     Dumping Scrapy stats:
 
 
 class BeautyLegMmSpider(scrapy.Spider):
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
-    init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
+    # if not os.path.exists('logs'):
+    #     os.mkdir('logs')
+    # init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
+    # init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
 
     name = 'beautylegmm_spider'
     allowed_domains = ['beautylegmm.com']
