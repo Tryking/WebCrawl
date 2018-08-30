@@ -76,7 +76,7 @@ ITEM_PIPELINES = {
     'porn.pipelines.MyImagesPipeline': 1,
 }
 
-IMAGES_STORE = 'images/mingxing'
+IMAGES_STORE = 'images/win4000'
 # 可以把图片转换为别的大小的图片存储到不同文件夹
 IMAGES_THUMBS = {
     'small': (50, 50),

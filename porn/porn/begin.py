@@ -15,4 +15,5 @@ from scrapy import cmdline
 # cmdline.execute("scrapy crawl meitulu_spider -s JOBDIR=crawls/meitulu".split())
 # cmdline.execute("scrapy crawl baidu_search_spider -s JOBDIR=crawls/baidu_search".split())
 # cmdline.execute("scrapy crawl file_url_spider -s JOBDIR=crawls/file_url".split())
-cmdline.execute("scrapy crawl mingxing_spider -s JOBDIR=crawls/mingxing".split())
+# cmdline.execute("scrapy crawl mingxing_spider -s JOBDIR=crawls/mingxing".split())
+cmdline.execute("scrapy crawl win4000_spider -s JOBDIR=crawls/win4000".split())
