@@ -1,29 +1,120 @@
 # -*- coding: utf-8 -*-
 import os
+import threading
 import time
 
 from selenium import webdriver
 from libs.common import *
 from selenium.webdriver import DesiredCapabilities, ActionChains
-from selenium.webdriver.common.keys import Keys
 
 """
 百度图片搜索（只保存图片链接到文件）
 """
 
 # 遇到错误后休息时长
-EXCEPTION_SLEEP_INTERVAL = 60
+EXCEPTION_SLEEP_INTERVAL = 10
 
 # 是否自动换IP（启动浏览器时更换IP）
 IS_AUTO_CHANGE_IP = False
 
 BASE_URL = 'https://image.baidu.com/search/index?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=result&fr=&sf=1&fmq=1535352159261_R&pv=' \
            '&ic=0&nc=1&z=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word=%s'
-SAVE_FILE_PATH = os.path.join('datas', 'jinritoutiao')
 
 PHANTOMJS_SLEEP_TIME = 3
 
-KEYWORDS = ['女人']
+KEYWORDS = []
+with open('keywords.txt', mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+    for line in lines:
+        keyword = line.strip('\n')
+        KEYWORDS.append(keyword)
+
+URL_SAVE_DIR = 'baidu_url'
+DOWNLOAD_DIR = 'baidu_download'
+
+
+class DownloadConsumer(threading.Thread):
+    """
+    更新歌手线程，用于往数据库中更新数据
+    """
+
+    def __init__(self, thread_name, urls):
+        threading.Thread.__init__(self)
+        self.__module = self.__class__.__name__
+        self.thread_name = thread_name
+        self.urls = urls
+
+    @staticmethod
+    def write_file_log(msg, __module='', level='error'):
+        filename = os.path.split(__file__)[1]
+        if level == 'debug':
+            logging.getLogger().debug('File:' + filename + ', ' + __module + ': ' + msg)
+        elif level == 'warning':
+            logging.getLogger().warning('File:' + filename + ', ' + __module + ': ' + msg)
+        else:
+            logging.getLogger().error('File:' + filename + ', ' + __module + ': ' + msg)
+
+    # debug log
+    def debug(self, msg, func_name=''):
+        __module = "%s.%s" % (self.__module, func_name)
+        msg = "thread_name: %s, %s" % (self.thread_name, msg)
+        self.write_file_log(msg, __module, 'debug')
+
+    # error log
+    def error(self, msg, func_name=''):
+        __module = "%s.%s" % (self.__module, func_name)
+        msg = "thread_name: %s, %s" % (self.thread_name, msg)
+        self.write_file_log(msg, __module, 'error')
+
+    def download_images(self, imgs):
+        sess = requests.Session()
+        if not os.path.exists(DOWNLOAD_DIR):
+            os.mkdir(DOWNLOAD_DIR)
+        requests_proxies = {
+            'http': 'http:127.0.0.1:1080',
+            'https': 'https:127.0.0.1:1080',
+        }
+        i = 0
+        for img in imgs:
+            i += 1
+            self.debug('%s - 第 %s / %s 个' % (self.thread_name, str(i), str(len(imgs))))
+            img = img.split('"')[-1].replace('\\', '')
+            try:
+                response = sess.get(img, proxies=requests_proxies)
+                if response.status_code == '200':
+                    img_content = response.content
+                    img_name = DOWNLOAD_DIR + os.path.sep + get_standard_file_name(img)
+                    with open(img_name, 'wb') as f:
+                        f.write(img_content)
+                    self.debug('pic saved completed')
+                else:
+                    self.debug('pic download fail: %s - %s' % (str(response.status_code), str(img)))
+            except Exception as e:
+                self.error('pic download fail: %s - %s' % (str(response.status_code), str(img)))
+
+        self.debug('%s - all pics saved' % self.thread_name)
+
+    def main(self):
+        try:
+            # 下载指定文件中的URL资源
+            dirs = os.listdir(URL_SAVE_DIR)
+            thread_list = list()
+            for file in dirs:
+                urls = list()
+                if '_url' in file:
+                    with open(file=file, mode='r', encoding='utf-8') as f:
+                        lines = f.readlines()
+                        for line in lines:
+                            urls.append(line.strip())
+                    thread = DownloadConsumer('thread - %s' % str(file), urls)
+                    thread_list.append(thread)
+            # 开启线程
+            for t in thread_list:
+                t.start()
+            for t in thread_list:
+                t.join()
+        except Exception as e:
+            self.error(str(e), get_current_func_name())
 
 
 class BaiduSoiderSelenium:
@@ -32,8 +123,8 @@ class BaiduSoiderSelenium:
     init_log(console_level=logging.DEBUG, file_level=logging.DEBUG, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
     init_log(console_level=logging.ERROR, file_level=logging.ERROR, logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
 
-    if not os.path.exists(SAVE_FILE_PATH):
-        os.makedirs(SAVE_FILE_PATH)
+    if not os.path.exists(URL_SAVE_DIR):
+        os.makedirs(URL_SAVE_DIR)
 
     HOST = 'https://image.baidu.com'
     save_file_name = 'default'
@@ -103,7 +194,7 @@ class BaiduSoiderSelenium:
 
     def start_requests(self):
         """
-        开始获取请求并处理搜索公众号结果
+        开始获取请求
         """
         self.init_browser()
         for keyword in KEYWORDS:
@@ -116,14 +207,6 @@ class BaiduSoiderSelenium:
                     # multiple scrolls needed to show all 400 images
                     self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight)")
                     time.sleep(1)
-
-                # # 将滚动条移动到页面的底部（模拟按键 down）（在服务器上使用 Phantomjs 不管用）
-                # for i in range(PRESS_DOWN_TIMES):
-                #     ActionChains(self.browser).key_down(Keys.DOWN).perform()
-                #     time.sleep(0.1)
-                #     if i % 100 == 0:
-                #         self.debug('第 %s / %s 次' % (str(i), str(PRESS_DOWN_TIMES)))
-                #         time.sleep(2)
 
                 items = list()
                 detail_urls = self.browser.find_elements_by_xpath('//div[@class="imgpage"]/ul/li/div/a')
@@ -154,14 +237,17 @@ class BaiduSoiderSelenium:
             self.browser.get(url)
             # time.sleep(1)
             imgage_ori_url = self.browser.find_elements_by_xpath('//img[@id="hdFirstImgObj"]')
+            if not os.path.exists(URL_SAVE_DIR):
+                os.makedirs(URL_SAVE_DIR)
             if imgage_ori_url and len(imgage_ori_url) > 0:
                 imgage_ori_url = imgage_ori_url[0].get_attribute('src')
-                with open(get_standard_file_name(keyword) + '.txt', mode='a+', encoding='utf-8') as f:
+                with open(URL_SAVE_DIR + os.path.sep + get_standard_file_name(keyword) + '.txt', mode='a+', encoding='utf-8') as f:
                     f.write(imgage_ori_url)
                     f.write('\n')
-
         except Exception as e:
             self.error(str(e))
+            time.sleep(EXCEPTION_SLEEP_INTERVAL)
+            self.init_browser(force_init=True)
 
     @staticmethod
     def write_file_log(msg, __module='', level='error'):
