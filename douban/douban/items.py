@@ -28,6 +28,8 @@ class MovieItem(scrapy.Item):
 
 # 评论信息
 class CommentItem(scrapy.Item):
+    # 评论 id
+    comment_id = scrapy.Field()
     # 电影名
     movie_title = scrapy.Field()
     # 电影 id

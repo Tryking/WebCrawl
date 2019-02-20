@@ -1,8 +1,11 @@
 import json
+import logging
+import os
 import re
 
 import scrapy
 
+from ..libs.common import init_log
 from ..items import MovieItem, CommentItem
 
 # 电影列表链接
@@ -12,6 +15,13 @@ COMMENT_URL = 'https://movie.douban.com/subject/%s/comments'
 
 
 class MovieSpider(scrapy.Spider):
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    init_log(console_level=logging.DEBUG, file_level=logging.DEBUG,
+             logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + ".log")
+    init_log(console_level=logging.ERROR, file_level=logging.ERROR,
+             logfile="logs/" + str(os.path.split(__file__)[1].split(".")[0]) + "_error.log")
+
     name = 'movie_spider'
     allowed_domains = ['douban.com']
     start_urls = ['']
@@ -36,7 +46,6 @@ class MovieSpider(scrapy.Spider):
 
     # 解析电影详情页
     def parse_detail_page(self, response):
-        result = response.text
         movie = response.meta['movie']
         rating_people = response.xpath('//*[@class="rating_people"]/span/text()')
         rating_num = response.xpath('//*[contains(@class,"rating_num")]/text()')
@@ -59,7 +68,8 @@ class MovieSpider(scrapy.Spider):
         comments = response.xpath('//*[contains(@class,"comment-item")]')
         for comment in comments:
             comment_item = CommentItem()
-            comment_user = comment.xpath('.//span[@class="comment-info"]/a/text()')
+            comment_id = comment.xpath('./@data-cid').extract_first()
+            comment_user = comment.xpath('.//span[@class="comment-info"]/a/text()').extract_first()
             # 'allstar10 rating'
             maybe_ratings = comment.xpath(
                 './div[contains(@class,"comment")]//span[@class="comment-info"]/span[contains(@class,"rating")]/@class').extract_first()
@@ -69,14 +79,19 @@ class MovieSpider(scrapy.Spider):
                 maybe_ratings = re.findall('allstar(\d+?)0', maybe_ratings, re.I)
                 # allstar10 1*  allstar20 2* allstar40 4*
                 rating = maybe_ratings[0] if len(maybe_ratings) > 0 else None
-            rating_time = comment.xpath('./div[contains(@class,"comment")]//span[contains(@class, "comment-time")]/@title').extract_first()
-            comment_content = comment.xpath('./div[contains(@class,"comment")]//span[contains(@class, "short")]/text()').extract_first()
+            rating_time = comment.xpath(
+                './div[contains(@class,"comment")]//span[contains(@class, "comment-time")]/@title').extract_first()
+            comment_content = comment.xpath(
+                './div[contains(@class,"comment")]//span[contains(@class, "short")]/text()').extract_first()
+            comment_item['comment_id'] = comment_id
             comment_item['movie_title'] = movie['title']
             comment_item['movie_id'] = movie['id']
             comment_item['user'] = comment_user
             comment_item['rating'] = rating
             comment_item['rating_time'] = rating_time
             comment_item['content'] = comment_content
+            yield comment_item
         next_url = response.xpath('//*[@id="paginator"]/a[@class="next"]/@href').extract_first()
         if next_url:
-            yield scrapy.Request(url=COMMENT_URL % movie['id'] + next_url, callback=self.parse_comment_page, meta={'movie': movie})
+            yield scrapy.Request(url=COMMENT_URL % movie['id'] + next_url, callback=self.parse_comment_page,
+                                 meta={'movie': movie})
