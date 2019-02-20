@@ -3,6 +3,7 @@ import os
 import threading
 import time
 
+import requests
 from selenium import webdriver
 from libs.common import *
 from selenium.webdriver import DesiredCapabilities, ActionChains
@@ -31,6 +32,7 @@ with open('keywords.txt', mode='r', encoding='utf-8') as f:
 
 URL_SAVE_DIR = 'baidu_url'
 DOWNLOAD_DIR = 'baidu_download'
+NEED_DOWNLOAD_URL_DIR = 'download_url'
 
 
 class DownloadConsumer(threading.Thread):
@@ -66,10 +68,10 @@ class DownloadConsumer(threading.Thread):
         msg = "thread_name: %s, %s" % (self.thread_name, msg)
         self.write_file_log(msg, __module, 'error')
 
-    def download_images(self, imgs):
+    def download_images(self, imgs, save_dir):
         sess = requests.Session()
-        if not os.path.exists(DOWNLOAD_DIR):
-            os.mkdir(DOWNLOAD_DIR)
+        if not os.path.exists(save_dir):
+            os.mkdir(save_dir)
         requests_proxies = {
             'http': 'http:127.0.0.1:1080',
             'https': 'https:127.0.0.1:1080',
@@ -97,17 +99,16 @@ class DownloadConsumer(threading.Thread):
     def main(self):
         try:
             # 下载指定文件中的URL资源
-            dirs = os.listdir(URL_SAVE_DIR)
+            dirs = os.listdir(NEED_DOWNLOAD_URL_DIR)
             thread_list = list()
             for file in dirs:
                 urls = list()
-                if '_url' in file:
-                    with open(file=file, mode='r', encoding='utf-8') as f:
-                        lines = f.readlines()
-                        for line in lines:
-                            urls.append(line.strip())
-                    thread = DownloadConsumer('thread - %s' % str(file), urls)
-                    thread_list.append(thread)
+                with open(file=file, mode='r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        urls.append(line.strip())
+                thread = DownloadConsumer('thread - %s' % str(file), urls)
+                thread_list.append(thread)
             # 开启线程
             for t in thread_list:
                 t.start()
@@ -153,13 +154,19 @@ class BaiduSoiderSelenium:
 
     def close_browser(self):
         if self.browser:
-            self.browser.close()
-            self.browser.quit()
+            try:
+                self.browser.close()
+                self.browser.quit()
+            except Exception as e:
+                pass
 
     def get_browser_phantomjs(self):
         if self.browser:
-            self.browser.close()
-            self.browser.quit()
+            try:
+                self.browser.close()
+                self.browser.quit()
+            except Exception as e:
+                pass
         service_args = None
         if IS_AUTO_CHANGE_IP:
             proxy_ip = get_available_ip_proxy()

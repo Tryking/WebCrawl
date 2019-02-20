@@ -1,17 +1,19 @@
-import math
 import re
-# -!- coding: utf-8 -!-
-import numpy as np
+
 import requests
 
-# url = 'http://mp.weixin.qq.com/profile?src=3&timestamp=1534934117&ver=1&signature=Ek4PhlS3l5co0DN61nuiL7woaxOx9ve8VOClzbFtOkoLSCO96Ety4iPxGfPD1NGy0INc5mjRJMoJ*xIPW3G4Wg=='
-#
-# for i in range(20):
-#     result = requests.get(url=url)
-#     with open('test.txt', mode='a+', encoding='utf-8') as f:
-#         f.write(result.text)
-#         print(result.text)
+# url = 'https://movie.douban.com/subject/30377703/comments?start=0&limit=30&sort=new_score&status=P'
+# result = requests.get(url=url)
+# print(result.status_code)
+# with open('test.html', mode='a+', encoding='utf-8') as f:
+#     f.write(result.text)
 
-print(math.ceil(5.36))
-print(math.ceil(9 / 2))
-print(type(math.ceil(9 / 2)))
+# s = [1, 2, 3]
+# item = next((x for x in s if x > 2), None)
+# print(item)
+s = 'allstar10 rating'
+
+findall = re.findall('allstar(\d+?)0', s, re.I)
+print(findall)
+
+s = 4
