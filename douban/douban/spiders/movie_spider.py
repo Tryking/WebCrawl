@@ -5,11 +5,14 @@ import re
 
 import scrapy
 
+from ..libs.db import DbMonitor
 from ..libs.common import init_log
 from ..items import MovieItem, CommentItem
 
+# 电影分类
+TAGS = ["热门", "最新", "经典", "可播放", "豆瓣高分", "冷门佳片", "华语", "欧美", "韩国", "日本", "动作", "喜剧", "爱情", "科幻", "悬疑", "恐怖", "治愈"]
 # 电影列表链接
-MOVIE_LIST_URL = 'https://movie.douban.com/j/search_subjects?type=movie&tag=热门&sort=recommend&page_limit=%s&page_start=%s'
+MOVIE_LIST_URL = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%s&sort=recommend&page_limit=%s&page_start=%s'
 # 电影评论链接，%s 为电影 id，limit 固定为20（不是20系统默认也会返回20） ?start=%s&limit=20&sort=new_score&status=P'
 COMMENT_URL = 'https://movie.douban.com/subject/%s/comments'
 
@@ -27,9 +30,14 @@ class MovieSpider(scrapy.Spider):
     start_urls = ['']
     HOST = 'https://movie.douban.com'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.db = DbMonitor()
+
     def start_requests(self):
-        url = MOVIE_LIST_URL % (100, 0)
-        yield scrapy.Request(url=url, callback=self.parse)
+        for tag in TAGS:
+            url = MOVIE_LIST_URL % (tag, 200, 0)
+            yield scrapy.Request(url=url, callback=self.parse)
 
     # 解析热门电影列表
     def parse(self, response):
@@ -42,7 +50,11 @@ class MovieSpider(scrapy.Spider):
             movie['url'] = item['url']
             movie['rate'] = item['rate']
             # yield scrapy.Request(url=movie.url, callback=self.parse_detail_page, meta={'movie': movie})
-            yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page, meta={'movie': movie})
+
+            comment_counts = self.db.count_match_movie_comments(movie=movie)
+            # 小于 5 说明没有爬取过
+            if comment_counts < 5:
+                yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page, meta={'movie': movie})
 
     # 解析电影详情页
     def parse_detail_page(self, response):
