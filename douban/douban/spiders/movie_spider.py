@@ -3,6 +3,7 @@ import logging
 import os
 import re
 
+import requests
 import scrapy
 
 from ..libs.db import DbMonitor
@@ -11,10 +12,13 @@ from ..items import MovieItem, CommentItem
 
 # 电影分类
 TAGS = ["热门", "最新", "经典", "可播放", "豆瓣高分", "冷门佳片", "华语", "欧美", "韩国", "日本", "动作", "喜剧", "爱情", "科幻", "悬疑", "恐怖", "治愈"]
+# TAGS = ['热门']
 # 电影列表链接
 MOVIE_LIST_URL = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%s&sort=recommend&page_limit=%s&page_start=%s'
 # 电影评论链接，%s 为电影 id，limit 固定为20（不是20系统默认也会返回20） ?start=%s&limit=20&sort=new_score&status=P'
 COMMENT_URL = 'https://movie.douban.com/subject/%s/comments'
+# 登录地址
+LOGIN_URL = 'https://accounts.douban.com/j/mobile/login/basic'
 
 
 class MovieSpider(scrapy.Spider):
@@ -32,11 +36,22 @@ class MovieSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # self.cookies = self.get_login_cookies()
         self.db = DbMonitor()
+
+    # 登录豆瓣
+    @staticmethod
+    def get_login_cookies():
+        headers = {
+            'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36',
+            'host': 'accounts.douban.com', 'Referer': 'https://accounts.douban.com/passport/login_popup?login_source=anony'}
+        data = {'name': '13257788084', 'password': 'db', 'remember': False}
+        response = requests.post(url=LOGIN_URL, data=data, headers=headers)
+        return response.cookies
 
     def start_requests(self):
         for tag in TAGS:
-            url = MOVIE_LIST_URL % (tag, 200, 0)
+            url = MOVIE_LIST_URL % (tag, 500, 0)
             yield scrapy.Request(url=url, callback=self.parse)
 
     # 解析热门电影列表
@@ -52,8 +67,8 @@ class MovieSpider(scrapy.Spider):
             # yield scrapy.Request(url=movie.url, callback=self.parse_detail_page, meta={'movie': movie})
 
             comment_counts = self.db.count_match_movie_comments(movie=movie)
-            # 小于 5 说明没有爬取过
-            if comment_counts < 5:
+            # 小于 221 说明只爬过不受限内容，登录后也只是能爬500条
+            if comment_counts < 500:
                 yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page, meta={'movie': movie})
 
     # 解析电影详情页
