@@ -15,8 +15,12 @@ TAGS = ["热门", "最新", "经典", "可播放", "豆瓣高分", "冷门佳片
 # TAGS = ['热门']
 # 电影列表链接
 MOVIE_LIST_URL = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%s&sort=recommend&page_limit=%s&page_start=%s'
-# 电影评论链接，%s 为电影 id，limit 固定为20（不是20系统默认也会返回20） ?start=%s&limit=20&sort=new_score&status=P'
+# 获取电影（比较全，9000+）
+MOVIE_GET_URL = 'https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=%s'
+# 电影评论链接，默认为热门评论，%s 为电影 id，limit 固定为20（不是20系统默认也会返回20） ?start=%s&limit=20&sort=new_score&status=P'
 COMMENT_URL = 'https://movie.douban.com/subject/%s/comments'
+# 电影评论链接 按评论时间排序 （这个每次可以爬取100条，可以隔一段时间爬取一次）
+COMMENT_URL_SORT_BY_TIME = 'https://movie.douban.com/subject/%s/comments?sort=time&status=P'
 # 登录地址
 LOGIN_URL = 'https://accounts.douban.com/j/mobile/login/basic'
 
@@ -50,11 +54,33 @@ class MovieSpider(scrapy.Spider):
         return response.cookies
 
     def start_requests(self):
-        for tag in TAGS:
-            url = MOVIE_LIST_URL % (tag, 500, 0)
-            yield scrapy.Request(url=url, callback=self.parse)
+        # 分类页开始
+        # for tag in TAGS:
+        #     url = MOVIE_LIST_URL % (tag, 500, 0)
+        #     yield scrapy.Request(url=url, callback=self.parse)
 
-    # 解析热门电影列表
+        # 选影视页开始 https://movie.douban.com/tag/#/ （比较全）
+        for i in range(0, 10000, 20):
+            url = MOVIE_GET_URL % i
+            yield scrapy.Request(url=url, callback=self.parse_movies)
+
+    def parse_movies(self, response):
+        result = response.text
+        result = json.loads(result, encoding='utf-8')
+        for item in result['data']:
+            movie = MovieItem()
+            movie['id'] = item['id']
+            movie['title'] = item['title']
+            movie['url'] = item['url']
+            movie['rate'] = item['rate']
+            # yield scrapy.Request(url=movie.url, callback=self.parse_detail_page, meta={'movie': movie})
+
+            comment_counts = self.db.count_match_movie_comments(movie=movie)
+            # 小于 221 说明只爬过不受限内容，登录后也只是能爬500条
+            if comment_counts < 1:
+                yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page, meta={'movie': movie})
+
+    # 解析分类电影列表
     def parse(self, response):
         result = response.text
         result = json.loads(result, encoding='utf-8')
@@ -68,7 +94,7 @@ class MovieSpider(scrapy.Spider):
 
             comment_counts = self.db.count_match_movie_comments(movie=movie)
             # 小于 221 说明只爬过不受限内容，登录后也只是能爬500条
-            if comment_counts < 500:
+            if comment_counts < 1:
                 yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page, meta={'movie': movie})
 
     # 解析电影详情页
