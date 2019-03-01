@@ -117,6 +117,7 @@ class MovieSpider(scrapy.Spider):
         movie_infos = response.xpath('//*[@id="info"]/span')
         movie_info_dict = {'导演': 'directors', '编剧': 'writers', '主演': 'actors', '类型': 'movie_types'}
         movie_types = []
+        movie['directors'] = [], movie['writers'] = [], movie['actors'] = []
         for movie_info in movie_infos:
             info_type = movie_info.xpath('./span/text()').extract_first()
             if info_type in ['导演', '编剧', '主演']:
