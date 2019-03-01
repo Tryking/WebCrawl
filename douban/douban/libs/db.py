@@ -26,3 +26,11 @@ class DbMonitor:
         movie_id = scrapy.Field()
         """
         return self.db['movie_comment'].count(filter={'movie_title': movie['title'], 'movie_id': movie['id']})
+
+    def has_match_movie(self, movie):
+        """
+        特定电影是否存在
+        :return: true，存在；false，不存在
+        """
+        count = self.db['movie'].count(filter={'movie_title': movie['title'], 'movie_id': movie['id']})
+        return True if count > 0 else False

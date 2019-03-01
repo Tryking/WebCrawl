@@ -24,6 +24,18 @@ class MovieItem(scrapy.Item):
     url = scrapy.Field()
     # 电影评分
     rate = scrapy.Field()
+    # 电影导演
+    directors = scrapy.Field()
+    # 电影编剧
+    writers = scrapy.Field()
+    # 电影主演
+    actors = scrapy.Field()
+    # 电影类型
+    movie_types = scrapy.Field()
+    # 评论人数
+    rating_people = scrapy.Field()
+    # 评论个数
+    rating_num = scrapy.Field()
 
 
 # 评论信息
@@ -42,3 +54,5 @@ class CommentItem(scrapy.Item):
     content = scrapy.Field()
     # 评价时间
     rating_time = scrapy.Field()
+    # 评论类型
+    comment_type = scrapy.Field()

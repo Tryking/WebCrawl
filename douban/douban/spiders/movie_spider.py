@@ -19,10 +19,15 @@ MOVIE_LIST_URL = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%s&s
 MOVIE_GET_URL = 'https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=%s'
 # 电影评论链接，默认为热门评论，%s 为电影 id，limit 固定为20（不是20系统默认也会返回20） ?start=%s&limit=20&sort=new_score&status=P'
 COMMENT_URL = 'https://movie.douban.com/subject/%s/comments'
+# 最新评论
+COMMENT_URL_NEWEST = 'https://movie.douban.com/subject/%s/comments?sort=time&status=P'
 # 电影评论链接 按评论时间排序 （这个每次可以爬取100条，可以隔一段时间爬取一次）
 COMMENT_URL_SORT_BY_TIME = 'https://movie.douban.com/subject/%s/comments?sort=time&status=P'
 # 登录地址
 LOGIN_URL = 'https://accounts.douban.com/j/mobile/login/basic'
+
+# 是否爬取最新评论（否的话会爬取热门评论）
+IS_NEW_COMMENT = True
 
 
 class MovieSpider(scrapy.Spider):
@@ -73,12 +78,19 @@ class MovieSpider(scrapy.Spider):
             movie['title'] = item['title']
             movie['url'] = item['url']
             movie['rate'] = item['rate']
-            # yield scrapy.Request(url=movie.url, callback=self.parse_detail_page, meta={'movie': movie})
+            if not self.db.has_match_movie(movie=movie):
+                yield scrapy.Request(url=movie['url'], callback=self.parse_detail_page, meta={'movie': movie})
 
-            comment_counts = self.db.count_match_movie_comments(movie=movie)
-            # 小于 221 说明只爬过不受限内容，登录后也只是能爬500条
-            if comment_counts < 1:
-                yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page, meta={'movie': movie})
+            # 爬取最新评论
+            if IS_NEW_COMMENT:
+                yield scrapy.Request(url=COMMENT_URL_NEWEST % movie['id'], callback=self.parse_comment_page,
+                                     meta={'movie': movie, 'comment_type': 'new'})
+            else:
+                comment_counts = self.db.count_match_movie_comments(movie=movie)
+                # 小于 221 说明只爬过不受限内容，登录后也只是能爬500条
+                if comment_counts < 1:
+                    yield scrapy.Request(url=COMMENT_URL % movie['id'], callback=self.parse_comment_page,
+                                         meta={'movie': movie, 'comment_type': 'hot'})
 
     # 解析分类电影列表
     def parse(self, response):
@@ -100,19 +112,22 @@ class MovieSpider(scrapy.Spider):
     # 解析电影详情页
     def parse_detail_page(self, response):
         movie = response.meta['movie']
-        rating_people = response.xpath('//*[@class="rating_people"]/span/text()')
-        rating_num = response.xpath('//*[contains(@class,"rating_num")]/text()')
+        rating_people = response.xpath('//*[@class="rating_people"]/span/text()').extract_first()
+        rating_num = response.xpath('//*[contains(@class,"rating_num")]/text()').extract_first()
         movie_infos = response.xpath('//*[@id="info"]/span')
-        movie_info_dict = {}
+        movie_info_dict = {'导演': 'directors', '编剧': 'writers', '主演': 'actors', '类型': 'movie_types'}
         movie_types = []
         for movie_info in movie_infos:
             info_type = movie_info.xpath('./span/text()').extract_first()
             if info_type in ['导演', '编剧', '主演']:
                 info_detail = movie_info.xpath('./span/a/text()').extract()
-                movie_info_dict[info_type] = info_detail
+                movie[movie_info_dict[info_type]] = info_detail
             if movie_info.xpath('./@property').extract_first() == 'v:genre':
                 movie_types.append(movie_info.xpath('./text()').extract_first())
-        movie_info_dict['类型'] = movie_types
+        movie[movie_info_dict['类型']] = movie_types
+        movie['rating_people'] = rating_people
+        movie['rating_num'] = rating_num
+        yield movie
 
     # 解析电影短评页
     def parse_comment_page(self, response):
@@ -143,8 +158,9 @@ class MovieSpider(scrapy.Spider):
             comment_item['rating'] = rating
             comment_item['rating_time'] = rating_time
             comment_item['content'] = comment_content
+            comment_item['comment_type'] = response.meta['comment_type']
             yield comment_item
         next_url = response.xpath('//*[@id="paginator"]/a[@class="next"]/@href').extract_first()
         if next_url:
             yield scrapy.Request(url=COMMENT_URL % movie['id'] + next_url, callback=self.parse_comment_page,
-                                 meta={'movie': movie})
+                                 meta={'movie': movie, 'comment_type': response.meta['comment_type']})
